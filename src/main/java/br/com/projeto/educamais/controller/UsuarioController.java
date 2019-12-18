@@ -1,5 +1,8 @@
 package br.com.projeto.educamais.controller;
 
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.created;
+
 import java.net.URI;
 import java.util.List;
 
@@ -28,16 +31,17 @@ public class UsuarioController {
 	public UsuarioService usuarioService;
 	
 	@GetMapping
-	public List<UsuarioDTO> obterTodosUsuarios() {
+	public ResponseEntity<List<UsuarioDTO>> obterTodosUsuarios() {
 		List<Usuario> usuarios = usuarioService.ObterTodosUsuarios();
-		return new UsuarioDTO().fromUsuarios(usuarios);
+		List<UsuarioDTO> listaUsuariosDTO =  new UsuarioDTO().converter(usuarios);
+		return ok(listaUsuariosDTO);
 	}
 	
 	@PostMapping
 	@Transactional
-	public ResponseEntity<Usuario> salvarUsuario(@RequestBody @Valid UsuarioForm form, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioForm form, UriComponentsBuilder uriBuilder) {
 		usuarioService.salva(form.getUsuario());
 		URI uri = uriBuilder.build().toUri();
-		return ResponseEntity.created(uri).build();
+		return created(uri).build();
 	}
 }

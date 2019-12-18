@@ -20,19 +20,21 @@ public class Usuario extends EntidadeAuditavel implements  UserDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long id;
+	private Long id;
 	
 	@Column(length = 16)
-	public String nome;
+	private String nome;
 	
 	@Column(length = 32)
-	public String email;
+	private String email;
 	
 	@Column(length = 64)
-	public String senha;
+	private String senha;
 	
 	@Column(length = 12)
 	private String role = "ROLE_USUARIO";
+	
+	//Getters & Setters
 	
 	public Long getId() {
 		return id;

@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.projeto.educamais.domain.Usuario;
-import br.com.projeto.educamais.exception.UsuarioExistenteException;
+import br.com.projeto.educamais.exception.EntidadeExistenteException;
+import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.repository.UsuarioRepository;
 
 @Service
@@ -27,7 +28,7 @@ public class UsuarioService extends GenericService {
 	public void salva(Usuario usuario) {
 		
 		if(usuarioRepository.findByEmail(usuario.getEmail()) != null) {
-			throw new UsuarioExistenteException();
+			throw new EntidadeExistenteException("Falha ao inserir usuário. Já existe um usuário cadastrado com esse e-mail.");
 		}
 		
 		preencherCamposAuditoria(usuario);
@@ -39,6 +40,16 @@ public class UsuarioService extends GenericService {
 		 if(usuario.isPresent()) {
 			 return usuario.get();
 		 }
-		 return null;
+		 throw new EntidadeInexistenteException("Usuário não existe.");
+	}
+	
+	public Usuario buscarPorEmail(String email) {
+		 Usuario usuario = usuarioRepository.findByEmail(email);
+		 
+		 if(usuario != null) {
+			 return usuario;
+		 }
+		 
+		 throw new EntidadeInexistenteException("Usuário não existe.");
 	}
 }

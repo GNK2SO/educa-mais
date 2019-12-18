@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.com.projeto.educamais.controller.dto.ErroDTO;
 import br.com.projeto.educamais.controller.dto.ErroFormularioDTO;
-import br.com.projeto.educamais.exception.UsuarioExistenteException;
+import br.com.projeto.educamais.exception.EntidadeExistenteException;
+import br.com.projeto.educamais.exception.UsuarioNaoAutenticadoException;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -24,9 +25,9 @@ public class ControllerExceptionHandler {
 	private MessageSource messageSource;
 	
 	@ResponseStatus(code = HttpStatus.CONFLICT)
-    @ExceptionHandler(value = { UsuarioExistenteException.class })
-    public ErroDTO handle(UsuarioExistenteException exception) {
-    	return new ErroDTO("Conflito", 409, exception.getMessage(), "/educamais/usuario");
+    @ExceptionHandler(value = { EntidadeExistenteException.class })
+    public ErroDTO handle(EntidadeExistenteException exception) {
+    	return new ErroDTO("Conflito", 409, exception.getMessage());
     }
 	
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -44,6 +45,12 @@ public class ControllerExceptionHandler {
 		});
 		
     	return listaErroDTO;
+    }
+	
+	@ResponseStatus(code = HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = { UsuarioNaoAutenticadoException.class })
+    public ErroDTO handle(UsuarioNaoAutenticadoException exception) {
+    	return new ErroDTO("Acesso Negado", 403, exception.getMessage());
     }
 
 }

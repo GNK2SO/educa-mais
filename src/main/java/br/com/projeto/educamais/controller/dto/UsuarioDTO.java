@@ -6,27 +6,26 @@ import java.util.List;
 import br.com.projeto.educamais.domain.Usuario;
 
 public class UsuarioDTO {
-	public Long id;
-	public String nome;
-	public String email;
+	private Long id;
+	private String nome;
+	private String email;
 	
-	public void fromUsuario(Usuario usuario) {
+	public UsuarioDTO() {}
+	
+	public UsuarioDTO(Usuario usuario) {
 		this.setId(usuario.getId());
 		this.setNome(usuario.getNome());
 		this.setEmail(usuario.getEmail());
 	}
 	
-	public List<UsuarioDTO> fromUsuarios(List<Usuario> usuarios) {
+	public List<UsuarioDTO> converter(List<Usuario> usuarios) {
 		
 		List<UsuarioDTO> usuariosDTO = new ArrayList<UsuarioDTO>();
-		UsuarioDTO dto = new UsuarioDTO();
+		UsuarioDTO dto;
 		
-		for(Usuario u: usuarios) {
+		for(Usuario usuario: usuarios) {
 			
-			dto.setId(u.getId());
-			dto.setNome(u.getNome());
-			dto.setEmail(u.getEmail());
-			
+			dto = new UsuarioDTO(usuario);
 			usuariosDTO.add(dto);
 		}
 		

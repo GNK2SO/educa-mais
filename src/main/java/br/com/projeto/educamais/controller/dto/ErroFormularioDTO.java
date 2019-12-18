@@ -2,8 +2,8 @@ package br.com.projeto.educamais.controller.dto;
 
 public class ErroFormularioDTO {
 
-	public String campo;
-	public String erro;
+	private String campo;
+	private String erro;
 	
 	public ErroFormularioDTO(String campo, String erro) {
 		this.campo = campo;
