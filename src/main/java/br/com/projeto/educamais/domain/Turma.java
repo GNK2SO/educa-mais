@@ -12,7 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class Turma extends EntidadeAuditavel {
 
 	private static final long serialVersionUID = 1L;
@@ -32,46 +37,4 @@ public class Turma extends EntidadeAuditavel {
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Usuario> alunos;
-
-	//Getters & Setters
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-
-	public Usuario getProfessor() {
-		return professor;
-	}
-
-	public void setProfessor(Usuario professor) {
-		this.professor = professor;
-	}
-
-	public List<Usuario> getAlunos() {
-		return alunos;
-	}
-
-	public void setAlunos(List<Usuario> alunos) {
-		this.alunos = alunos;
-	}
 }
