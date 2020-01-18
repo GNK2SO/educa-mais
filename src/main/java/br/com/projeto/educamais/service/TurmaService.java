@@ -25,11 +25,11 @@ public class TurmaService extends GenericService {
 	@Transactional
 	public void salva(Turma turma) {
 		
-		if(turmaRepository.findByNome(turma.getNome()) != null) {
-			throw new EntidadeExistenteException("Falha ao inserir turma. Já existe uma turma cadastrado com esse nome.");
+		if(turmaRepository.existsByNome(turma.getNome())) {
+			throw new EntidadeExistenteException("Falha ao cadastrar turma. Já existe uma turma cadastrada com esse nome.");
 		}
 		
-		if(turmaRepository.findByCodigo(turma.getCodigo()) != null) {
+		if(turmaRepository.existsByCodigo(turma.getCodigo())) {
 			String codigo = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 			turma.setCodigo(codigo); 
 		}

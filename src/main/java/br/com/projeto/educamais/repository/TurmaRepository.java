@@ -11,9 +11,11 @@ import br.com.projeto.educamais.domain.Usuario;
 @Repository
 public interface TurmaRepository extends JpaRepository<Turma, Long> {
 
-	public Turma findByNome(String nome);
+	public boolean existsByNome(String nome);
 	
-	public Turma findByCodigo(String codigo);
+	public boolean existsByCodigo(String codigo);
 	
 	public List<Turma> findByProfessor(Usuario professor);
+	
+	
 }

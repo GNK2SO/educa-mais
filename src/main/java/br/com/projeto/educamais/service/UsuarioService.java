@@ -27,8 +27,8 @@ public class UsuarioService extends GenericService {
 	@Transactional
 	public void salva(Usuario usuario) {
 		
-		if(usuarioRepository.findByEmail(usuario.getEmail()) != null) {
-			throw new EntidadeExistenteException("Falha ao inserir usuário. Já existe um usuário cadastrado com esse e-mail.");
+		if(usuarioRepository.existsByEmail(usuario.getEmail())) {
+			throw new EntidadeExistenteException("Falha ao cadastrar usuário. Já existe um usuário cadastrado com esse e-mail.");
 		}
 		
 		preencherCamposAuditoria(usuario);
@@ -40,7 +40,7 @@ public class UsuarioService extends GenericService {
 		 if(usuario.isPresent()) {
 			 return usuario.get();
 		 }
-		 throw new EntidadeInexistenteException("Usuário não existe.");
+		 throw new EntidadeInexistenteException("Falha ao obter usuário. Usuário não está cadastrado.");
 	}
 	
 	public Usuario buscarPorEmail(String email) {
@@ -50,6 +50,6 @@ public class UsuarioService extends GenericService {
 			 return usuario;
 		 }
 		 
-		 throw new EntidadeInexistenteException("Usuário não existe.");
+		 throw new EntidadeInexistenteException("Falha ao obter usuário. Usuário não está cadastrado.");
 	}
 }
