@@ -52,4 +52,8 @@ public class UsuarioService extends GenericService {
 		 
 		 throw new EntidadeInexistenteException("Falha ao obter usuário. Usuário não está cadastrado.");
 	}
+	
+	public void atualizarDados(Usuario usuario) {
+		usuarioRepository.saveAndFlush(usuario);
+	}
 }

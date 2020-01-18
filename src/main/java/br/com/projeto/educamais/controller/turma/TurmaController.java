@@ -1,5 +1,8 @@
 package br.com.projeto.educamais.controller.turma;
 
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.created;
+
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
@@ -13,17 +16,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.projeto.educamais.controller.generic.AlteraNomeForm;
 import br.com.projeto.educamais.controller.turma.dto.ListaTurmaDTO;
 import br.com.projeto.educamais.controller.turma.dto.TurmaDTO;
 import br.com.projeto.educamais.controller.turma.form.ParticiparForm;
 import br.com.projeto.educamais.controller.turma.form.TurmaForm;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
+import br.com.projeto.educamais.exception.AlunoNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.service.TurmaService;
 
 @RestController
@@ -42,14 +48,14 @@ public class TurmaController {
 		
 		List<Turma> turmas = turmaService.obterTurmasUsuarioAutenticado(professor);
 		List<ListaTurmaDTO> turmasDTO = new ListaTurmaDTO().converter(turmas);
-		return ResponseEntity.ok(turmasDTO);
+		return ok(turmasDTO);
 	}
 	
 	@GetMapping("/{id}")
 	@Transactional
-	public ResponseEntity<TurmaDTO> obterTurma(@PathVariable("id") Long id) {
+	public ResponseEntity<TurmaDTO> obterTurma(@PathVariable Long id) {
 		Turma turma = turmaService.obterTurmaPorId(id);
-		return ResponseEntity.ok(new TurmaDTO(turma));
+		return ok(new TurmaDTO(turma));
 	}
 	
 	@PostMapping
@@ -61,7 +67,7 @@ public class TurmaController {
 		
 		turmaService.salva(form.getTurma(professor));
 		URI uri = uriBuilder.build().toUri();
-		return ResponseEntity.created(uri).build();
+		return created(uri).build();
 	}
 	
 	@PostMapping("/participar")
@@ -74,6 +80,24 @@ public class TurmaController {
 		Turma turma = turmaService.obterTurmaPorCodigo(form.getCodigoTurma());
 		turmaService.participar(turma, usuario);
 		
-		return ResponseEntity.ok().build();
+		return ok().build();
+	}
+	
+	@PutMapping("/{id}")
+	@Transactional
+	public ResponseEntity<Turma> alterarNome(@PathVariable Long id, @RequestBody @Valid AlteraNomeForm form, Principal principal) {
+		
+		//Recuperando usuário logado
+		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+		
+		Turma turma = turmaService.obterTurmaPorId(id);
+		turma.setNome(form.getNome());
+		
+		if(turma.professorIsNotEqualTo(usuario)) {
+			throw new AlunoNaoTemPermissaoParaEssaAtividadeException("Usuário não tem permissão para alterar o nome da turma.");
+		}
+		
+		turmaService.atualizarDados(turma);
+		return ok().build();
 	}
 }

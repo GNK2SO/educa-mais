@@ -45,4 +45,8 @@ public class Turma extends EntidadeAuditavel {
 	public boolean contains(Usuario aluno) {
 		return this.alunos.contains(aluno);
 	}
+	
+	public boolean professorIsNotEqualTo(Usuario usuario) {
+		return !this.professor.equals(usuario);
+	}
 }
