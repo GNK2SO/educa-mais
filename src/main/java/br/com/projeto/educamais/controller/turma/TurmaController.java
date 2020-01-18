@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.projeto.educamais.controller.turma.dto.ListaTurmaDTO;
 import br.com.projeto.educamais.controller.turma.dto.TurmaDTO;
+import br.com.projeto.educamais.controller.turma.form.ParticiparForm;
 import br.com.projeto.educamais.controller.turma.form.TurmaForm;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
@@ -47,7 +48,7 @@ public class TurmaController {
 	@GetMapping("/{id}")
 	@Transactional
 	public ResponseEntity<TurmaDTO> obterTurma(@PathVariable("id") Long id) {
-		Turma turma = turmaService.obterTurmasPorId(id);
+		Turma turma = turmaService.obterTurmaPorId(id);
 		return ResponseEntity.ok(new TurmaDTO(turma));
 	}
 	
@@ -61,5 +62,18 @@ public class TurmaController {
 		turmaService.salva(form.getTurma(professor));
 		URI uri = uriBuilder.build().toUri();
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@PostMapping("/participar")
+	@Transactional
+	public ResponseEntity<Turma> participarTurma(@RequestBody @Valid ParticiparForm form, Principal pricipal) {
+		
+		//Recuperando usuário logado
+		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) pricipal).getPrincipal();
+		
+		Turma turma = turmaService.obterTurmaPorCodigo(form.getCodigoTurma());
+		turmaService.participar(turma, usuario);
+		
+		return ResponseEntity.ok().build();
 	}
 }

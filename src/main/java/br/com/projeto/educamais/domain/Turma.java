@@ -37,4 +37,12 @@ public class Turma extends EntidadeAuditavel {
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Usuario> alunos;
+	
+	public void add(Usuario aluno) {
+		this.alunos.add(aluno);
+	}
+	
+	public boolean contains(Usuario aluno) {
+		return this.alunos.contains(aluno);
+	}
 }

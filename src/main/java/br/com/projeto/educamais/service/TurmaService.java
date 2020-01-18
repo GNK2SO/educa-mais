@@ -13,6 +13,8 @@ import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeExistenteException;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
+import br.com.projeto.educamais.exception.ProfessorNaoPodeSerAlunoException;
+import br.com.projeto.educamais.exception.UsuarioJaEstaNaTurmaException;
 import br.com.projeto.educamais.repository.TurmaRepository;
 
 @Service
@@ -49,7 +51,7 @@ public class TurmaService extends GenericService {
 	}
 	
 	@Transactional
-	public Turma obterTurmasPorId(Long id) {
+	public Turma obterTurmaPorId(Long id) {
 		Optional<Turma> turma = turmaRepository.findById(id);
 		if(turma.isPresent()) {
 			return turma.get();
@@ -58,7 +60,31 @@ public class TurmaService extends GenericService {
 	}
 	
 	@Transactional
+	public Turma obterTurmaPorCodigo(String codigo) {
+		Optional<Turma> turma = turmaRepository.findByCodigo(codigo);
+		if(turma.isPresent()) {
+			return turma.get();
+		}
+		throw new EntidadeInexistenteException("Falha ao obter turma. Turma não está cadastrada.");
+	}
+	
+	
+	@Transactional
 	public Turma atualizarDados(Turma turma) {
 		return turmaRepository.saveAndFlush(turma);
+	}
+
+	@Transactional
+	public void participar(Turma turma, Usuario usuario) {
+		if(turma.getProfessor().getId() == usuario.getId()) {
+			throw new ProfessorNaoPodeSerAlunoException();
+		}
+		
+		if(turma.contains(usuario)) {
+			throw new UsuarioJaEstaNaTurmaException();
+		}
+		
+		turma.add(usuario);
+		turmaRepository.saveAndFlush(turma);
 	}
 }
