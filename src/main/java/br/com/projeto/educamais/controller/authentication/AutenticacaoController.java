@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.controller;
+package br.com.projeto.educamais.controller.authentication;
 
 import javax.validation.Valid;
 
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.projeto.educamais.config.security.jwt.TokenService;
-import br.com.projeto.educamais.controller.dto.LoginDTO;
-import br.com.projeto.educamais.controller.form.LoginForm;
+import br.com.projeto.educamais.controller.authentication.dto.LoginDTO;
+import br.com.projeto.educamais.controller.authentication.form.LoginForm;
 
 @RestController
 @RequestMapping("/auth")

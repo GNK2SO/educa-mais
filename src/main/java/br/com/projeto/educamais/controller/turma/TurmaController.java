@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.controller;
+package br.com.projeto.educamais.controller.turma;
 
 import java.net.URI;
 import java.security.Principal;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.projeto.educamais.controller.dto.ListaTurmaDTO;
-import br.com.projeto.educamais.controller.dto.TurmaDTO;
-import br.com.projeto.educamais.controller.form.TurmaForm;
+import br.com.projeto.educamais.controller.turma.dto.ListaTurmaDTO;
+import br.com.projeto.educamais.controller.turma.dto.TurmaDTO;
+import br.com.projeto.educamais.controller.turma.form.TurmaForm;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.TurmaService;

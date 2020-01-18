@@ -1,8 +1,9 @@
-package br.com.projeto.educamais.controller.dto;
+package br.com.projeto.educamais.controller.turma.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.projeto.educamais.controller.usuario.dto.UsuarioDTO;
 import br.com.projeto.educamais.domain.Turma;
 
 public class TurmaDTO {

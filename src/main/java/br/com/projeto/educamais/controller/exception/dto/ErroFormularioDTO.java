@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.controller.dto;
+package br.com.projeto.educamais.controller.exception.dto;
 
 public class ErroFormularioDTO {
 

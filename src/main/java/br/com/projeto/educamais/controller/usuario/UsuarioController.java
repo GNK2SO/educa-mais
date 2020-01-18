@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.controller;
+package br.com.projeto.educamais.controller.usuario;
 
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.created;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.projeto.educamais.controller.dto.UsuarioDTO;
-import br.com.projeto.educamais.controller.form.UsuarioForm;
+import br.com.projeto.educamais.controller.usuario.dto.UsuarioDTO;
+import br.com.projeto.educamais.controller.usuario.form.UsuarioForm;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.UsuarioService;
 

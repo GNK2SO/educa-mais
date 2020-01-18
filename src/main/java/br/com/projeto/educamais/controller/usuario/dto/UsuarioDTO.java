@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.controller.dto;
+package br.com.projeto.educamais.controller.usuario.dto;
 
 import java.util.ArrayList;
 import java.util.List;

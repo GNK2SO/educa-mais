@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.controller.form;
+package br.com.projeto.educamais.controller.authentication.form;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
