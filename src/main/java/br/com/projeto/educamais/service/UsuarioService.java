@@ -54,6 +54,7 @@ public class UsuarioService extends GenericService {
 	}
 	
 	public void atualizarDados(Usuario usuario) {
+		preencherCamposAuditoria(usuario);
 		usuarioRepository.saveAndFlush(usuario);
 	}
 }

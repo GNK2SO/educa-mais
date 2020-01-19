@@ -39,15 +39,10 @@ public class TurmaService extends GenericService {
 		preencherCamposAuditoria(turma);
 		turmaRepository.save(turma);
 	}
-
-	@Transactional
-	public List<Turma> obterTodasTurmas() {
-		return turmaRepository.findAll();
-	}
 	
 	@Transactional
-	public List<Turma> obterTurmasUsuarioAutenticado(Usuario professor) {
-		return turmaRepository.findByProfessor(professor);
+	public List<Turma> obterTurmas(Usuario usuario) {
+		return turmaRepository.findByProfessorOrAlunosContaining(usuario, usuario);
 	}
 	
 	@Transactional
@@ -71,6 +66,7 @@ public class TurmaService extends GenericService {
 	
 	@Transactional
 	public Turma atualizarDados(Turma turma) {
+		preencherCamposAuditoria(turma);
 		return turmaRepository.saveAndFlush(turma);
 	}
 

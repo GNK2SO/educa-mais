@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.com.projeto.educamais.controller.exception.dto.ErroDTO;
 import br.com.projeto.educamais.controller.exception.dto.ErroFormularioDTO;
-import br.com.projeto.educamais.exception.AlunoNaoTemPermissaoParaEssaAtividadeException;
+import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.exception.EntidadeExistenteException;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.ProfessorNaoPodeSerAlunoException;
@@ -76,8 +76,8 @@ public class ControllerExceptionHandler {
     }
 
 	@ResponseStatus(code = HttpStatus.FORBIDDEN)
-    @ExceptionHandler(value = { AlunoNaoTemPermissaoParaEssaAtividadeException.class })
-    public ErroDTO handle(AlunoNaoTemPermissaoParaEssaAtividadeException exception) {
+    @ExceptionHandler(value = { UsuarioNaoTemPermissaoParaEssaAtividadeException.class })
+    public ErroDTO handle(UsuarioNaoTemPermissaoParaEssaAtividadeException exception) {
     	return new ErroDTO("Acesso Negado", 403, exception.getMessage());
     }
 	

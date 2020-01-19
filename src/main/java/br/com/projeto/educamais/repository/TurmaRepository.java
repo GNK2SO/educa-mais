@@ -16,8 +16,7 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 	
 	public boolean existsByCodigo(String codigo);
 	
-	public List<Turma> findByProfessor(Usuario professor);
+	public List<Turma> findByProfessorOrAlunosContaining(Usuario professor, Usuario aluno);
 	
 	public Optional<Turma> findByCodigo(String codigo);
-	
 }
