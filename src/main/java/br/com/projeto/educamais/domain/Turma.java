@@ -8,6 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,8 +35,16 @@ public class Turma extends EntidadeAuditavel {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Usuario> alunos;
 	
+	@OneToMany(fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Postagem> postagens;
+	
 	public void add(Usuario aluno) {
 		this.alunos.add(aluno);
+	}
+	
+	public void add(Postagem postagem) {
+		this.postagens.add(postagem);
 	}
 	
 	public boolean contains(Usuario aluno) {
