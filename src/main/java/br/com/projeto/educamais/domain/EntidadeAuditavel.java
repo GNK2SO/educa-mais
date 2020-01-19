@@ -18,7 +18,10 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Data;
+
 @MappedSuperclass
+@Data
 public abstract class EntidadeAuditavel implements Serializable {
 
     private static final long serialVersionUID = -4707221236917915815L;
@@ -46,52 +49,4 @@ public abstract class EntidadeAuditavel implements Serializable {
     @ManyToOne
     @JoinColumn
     private Usuario ultimaModificacaoPor;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getVersao() {
-		return versao;
-	}
-
-	public void setVersao(Long versao) {
-		this.versao = versao;
-	}
-
-	public LocalDate getDataCriacao() {
-		return dataCriacao;
-	}
-
-	public void setDataCriacao(LocalDate dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
-
-	public LocalDate getDataUltimaModificacao() {
-		return dataUltimaModificacao;
-	}
-
-	public void setDataUltimaModificacao(LocalDate dataUltimaModificacao) {
-		this.dataUltimaModificacao = dataUltimaModificacao;
-	}
-
-	public Usuario getCriadoPor() {
-		return criadoPor;
-	}
-
-	public void setCriadoPor(Usuario criadoPor) {
-		this.criadoPor = criadoPor;
-	}
-
-	public Usuario getUltimaModificacaoPor() {
-		return ultimaModificacaoPor;
-	}
-
-	public void setUltimaModificacaoPor(Usuario ultimaModificacaoPor) {
-		this.ultimaModificacaoPor = ultimaModificacaoPor;
-	}
 }

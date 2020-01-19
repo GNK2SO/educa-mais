@@ -31,7 +31,7 @@ public class UsuarioService extends GenericService {
 			throw new EntidadeExistenteException("Falha ao cadastrar usuário. Já existe um usuário cadastrado com esse e-mail.");
 		}
 		
-		preencherCamposAuditoria(usuario);
+		preencherCamposAuditoria(usuario, usuario);
 		usuarioRepository.save(usuario);
 	}
 
@@ -54,7 +54,6 @@ public class UsuarioService extends GenericService {
 	}
 	
 	public void atualizarDados(Usuario usuario) {
-		preencherCamposAuditoria(usuario);
-		usuarioRepository.saveAndFlush(usuario);
+		preencherCamposAuditoria(usuario, usuario);
 	}
 }

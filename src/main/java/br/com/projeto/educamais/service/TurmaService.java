@@ -36,7 +36,7 @@ public class TurmaService extends GenericService {
 			turma.setCodigo(codigo); 
 		}
 		
-		preencherCamposAuditoria(turma);
+		preencherCamposAuditoria(turma, turma.getProfessor());
 		turmaRepository.save(turma);
 	}
 	
@@ -65,9 +65,8 @@ public class TurmaService extends GenericService {
 	
 	
 	@Transactional
-	public Turma atualizarDados(Turma turma) {
-		preencherCamposAuditoria(turma);
-		return turmaRepository.saveAndFlush(turma);
+	public void atualizarDados(Turma turma) {
+		preencherCamposAuditoria(turma, turma.getProfessor());
 	}
 
 	@Transactional
@@ -81,6 +80,5 @@ public class TurmaService extends GenericService {
 		}
 		
 		turma.add(usuario);
-		turmaRepository.saveAndFlush(turma);
 	}
 }
