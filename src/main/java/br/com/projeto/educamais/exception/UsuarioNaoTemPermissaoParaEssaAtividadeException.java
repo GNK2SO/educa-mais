@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.FORBIDDEN)
-public class AlunoNaoTemPermissaoParaEssaAtividadeException extends RuntimeException {
+public class UsuarioNaoTemPermissaoParaEssaAtividadeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public AlunoNaoTemPermissaoParaEssaAtividadeException(String mensagem) {
+	public UsuarioNaoTemPermissaoParaEssaAtividadeException(String mensagem) {
 		super(mensagem);
 	}
 }

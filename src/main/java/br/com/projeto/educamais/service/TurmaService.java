@@ -46,8 +46,8 @@ public class TurmaService extends GenericService {
 	}
 	
 	@Transactional
-	public List<Turma> obterTurmasUsuarioAutenticado(Usuario professor) {
-		return turmaRepository.findByProfessor(professor);
+	public List<Turma> obterTurmasUsuarioAutenticado(Usuario usuario) {
+		return turmaRepository.findByProfessorOrAlunosContaining(usuario, usuario);
 	}
 	
 	@Transactional
