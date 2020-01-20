@@ -93,6 +93,19 @@ public class TurmaController {
 		return ok().build();
 	}
 	
+	@PostMapping("/{id}/sair")
+	@Transactional
+	public ResponseEntity<Turma> sairTurma(@PathVariable Long id, Principal pricipal) {
+		
+		//Recuperando usuário logado
+		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) pricipal).getPrincipal();
+		
+		Turma turma = turmaService.obterTurmaPorId(id);
+		turmaService.sairTurma(turma, usuario);
+		
+		return ok().build();
+	}
+	
 	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<Turma> alterarNome(@PathVariable Long id, @RequestBody @Valid AlteraNomeForm form, Principal principal) {

@@ -15,6 +15,7 @@ import br.com.projeto.educamais.exception.EntidadeExistenteException;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.ProfessorNaoPodeSerAlunoException;
 import br.com.projeto.educamais.exception.UsuarioJaEstaNaTurmaException;
+import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.TurmaRepository;
 
 @Service
@@ -80,5 +81,14 @@ public class TurmaService extends GenericService {
 		}
 		
 		turma.add(usuario);
+	}
+
+	@Transactional
+	public void sairTurma(Turma turma, Usuario usuario) {
+		if(turma.notContains(usuario)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Falha ao sair da turma. Usuário não participa dessa turma.");
+		}
+		
+		turma.remove(usuario);
 	}
 }

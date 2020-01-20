@@ -47,8 +47,16 @@ public class Turma extends EntidadeAuditavel {
 		this.postagens.add(postagem);
 	}
 	
+	public void remove(Usuario aluno) {
+		this.alunos.remove(aluno);
+	}
+	
 	public boolean contains(Usuario aluno) {
 		return this.alunos.contains(aluno);
+	}
+	
+	public boolean notContains(Usuario aluno) {
+		return !this.alunos.contains(aluno);
 	}
 	
 	public boolean professorIsEqualTo(Usuario usuario) {
