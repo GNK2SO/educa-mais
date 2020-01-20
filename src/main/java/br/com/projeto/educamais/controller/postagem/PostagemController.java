@@ -1,6 +1,7 @@
 package br.com.projeto.educamais.controller.postagem;
 
 import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.ok;
 
 import java.net.URI;
 import java.security.Principal;
@@ -12,11 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.projeto.educamais.controller.postagem.form.AtualizarPostagemForm;
 import br.com.projeto.educamais.controller.postagem.form.PostagemForm;
 import br.com.projeto.educamais.domain.Postagem;
 import br.com.projeto.educamais.domain.Usuario;
@@ -39,5 +42,16 @@ public class PostagemController {
 		postagemService.salvar(idTurma, usuario, form.getPostagem());
 		URI uri = uriBuilder.build().toUri();
 		return created(uri).build();
+	}
+	
+	@PutMapping("/{turmaId}/postagem/{postagemId}")
+	@Transactional
+	public ResponseEntity<Postagem> atualizarPostagem(@RequestBody @Valid AtualizarPostagemForm form, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal, UriComponentsBuilder uriBuilder) {
+		
+		//Recuperando usuário logado
+		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+		
+		postagemService.atualizarPostagem(turmaId, usuario, postagemId, form);
+		return ok().build();
 	}
 }
