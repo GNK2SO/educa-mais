@@ -3,10 +3,11 @@ package br.com.projeto.educamais.controller.turma.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.projeto.educamais.controller.postagem.dto.ListaPostagemDTO;
+import br.com.projeto.educamais.controller.postagem.dto.PostagemDTO;
 import br.com.projeto.educamais.controller.usuario.dto.UsuarioDTO;
 import br.com.projeto.educamais.domain.Turma;
 import lombok.Data;
+
 @Data
 public class TurmaDTO {
 
@@ -15,11 +16,11 @@ public class TurmaDTO {
 	private String codigo;
 	private UsuarioDTO professor;
 	private List<UsuarioDTO> alunos;
-	private List<ListaPostagemDTO> postagens;
+	private List<PostagemDTO> postagens;
 	
 	public TurmaDTO(Turma turma) {
 		List<UsuarioDTO> alunos = new UsuarioDTO().converter(turma.getAlunos());
-		List<ListaPostagemDTO> postagens = new ListaPostagemDTO().converter(turma.getPostagens());
+		List<PostagemDTO> postagens = new PostagemDTO().converter(turma.getPostagens());
 		
 		this.setId(turma.getId());
 		this.setNome(turma.getNome());
