@@ -40,6 +40,7 @@ public class PostagemService extends GenericService {
 		turmaService.atualizarDados(turma);
 	}
 	
+	@Transactional
 	public Postagem obterPorId(Long id) {
 		Optional<Postagem> postagem = repository.findById(id);
 		if(postagem.isPresent()) {
@@ -48,6 +49,7 @@ public class PostagemService extends GenericService {
 		throw new EntidadeInexistenteException("Falha ao obter postagem. Postagem não está cadastrada.");
 	}
 
+	@Transactional
 	public void atualizarPostagem(Long turmaId, Usuario usuario, Long postagemId, AtualizarPostagemForm form) {
 		Turma turma = turmaService.obterTurmaPorId(turmaId);
 		
@@ -61,6 +63,19 @@ public class PostagemService extends GenericService {
 		
 		preencherCamposAuditoria(postagem, usuario);
 		
+	}
+
+	@Transactional
+	public void deletarPostagem(Long turmaId, Usuario usuario, Long postagemId) {
+		Turma turma = turmaService.obterTurmaPorId(turmaId);
+		
+		if(turma.professorIsNotEqualTo(usuario)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para deletar postagens.");
+		}
+		
+		Postagem postagem = obterPorId(postagemId);
+		
+		repository.deleteById(postagem.getId());
 	}
 	
 }

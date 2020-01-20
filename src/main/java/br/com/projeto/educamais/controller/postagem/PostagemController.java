@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -52,6 +53,16 @@ public class PostagemController {
 		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
 		
 		postagemService.atualizarPostagem(turmaId, usuario, postagemId, form);
+		return ok().build();
+	}
+	
+	@DeleteMapping("/{turmaId}/postagem/{postagemId}")
+	@Transactional
+	public ResponseEntity<Postagem> deletarPostagem(@PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal, UriComponentsBuilder uriBuilder) {
+		
+		//Recuperando usuário logado
+		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+		postagemService.deletarPostagem(turmaId, usuario, postagemId);
 		return ok().build();
 	}
 }
