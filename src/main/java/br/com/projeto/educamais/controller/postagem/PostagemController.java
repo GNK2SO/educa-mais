@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,20 +23,20 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.PostagemService;
 
 @RestController
-@RequestMapping("/educamais/postagens")
+@RequestMapping("/educamais/turmas")
 public class PostagemController {
 
 	@Autowired
 	public PostagemService postagemService;
 	
-	@PostMapping
+	@PostMapping("/{id}/postagem")
 	@Transactional
-	public ResponseEntity<Postagem> cadastrarPostagem(@RequestBody @Valid PostagemForm form, Principal principal, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Postagem> cadastrarPostagem(@RequestBody @Valid PostagemForm form, @PathVariable("id") Long idTurma, Principal principal, UriComponentsBuilder uriBuilder) {
 		
 		//Recuperando usuário logado
 		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
 		
-		postagemService.salvar(form.getIdTurma(), usuario, form.getPostagem());
+		postagemService.salvar(idTurma, usuario, form.getPostagem());
 		URI uri = uriBuilder.build().toUri();
 		return created(uri).build();
 	}

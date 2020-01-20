@@ -11,9 +11,6 @@ import lombok.Data;
 @Data
 public class PostagemForm {
 	
-	@NotNull
-	private Long idTurma;
-	
 	@NotEmpty @NotNull @Length(max = 32)
 	private String titulo;
 	
