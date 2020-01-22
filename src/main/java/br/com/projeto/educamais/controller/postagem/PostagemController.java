@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.projeto.educamais.controller.postagem.dto.PostagemDTO;
 import br.com.projeto.educamais.controller.postagem.form.AtualizarPostagemForm;
 import br.com.projeto.educamais.controller.postagem.form.PostagemForm;
 import br.com.projeto.educamais.domain.Postagem;
@@ -29,13 +30,13 @@ public class PostagemController {
 	public PostagemService postagemService;
 	
 	@PostMapping("/{id}/postagem")
-	public ResponseEntity<Postagem> cadastrarPostagem(@RequestBody @Valid PostagemForm form, @PathVariable("id") Long idTurma, Principal principal) {
+	public ResponseEntity<PostagemDTO> cadastrarPostagem(@RequestBody @Valid PostagemForm form, @PathVariable("id") Long idTurma, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
 		Postagem postagem = postagemService.salvar(idTurma, usuarioLogado, form.getPostagem());
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(postagem);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new PostagemDTO(postagem));
 	}
 	
 	@PutMapping("/{turmaId}/postagem/{postagemId}")
