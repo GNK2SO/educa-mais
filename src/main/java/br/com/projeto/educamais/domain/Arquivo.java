@@ -7,9 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Arquivo {
 
 	@Id
@@ -18,4 +20,8 @@ public class Arquivo {
 	
 	@Column
 	private String titulo;
+	
+	public Arquivo(String titulo) {
+		this.titulo = titulo;
+	}
 }

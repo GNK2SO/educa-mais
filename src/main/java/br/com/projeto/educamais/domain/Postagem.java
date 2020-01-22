@@ -31,4 +31,8 @@ public class Postagem extends EntidadeAuditavel{
 	
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<Arquivo> arquivos;
+	
+	public void add(Arquivo arquivo) {
+		this.arquivos.add(arquivo);
+	}
 }

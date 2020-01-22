@@ -66,6 +66,11 @@ public class PostagemService extends GenericService {
 		preencherCamposAuditoria(postagem, usuario);
 		
 	}
+	
+	@Transactional
+	public void atualizarPostagem(Postagem postagem, Usuario usuario) {
+		preencherCamposAuditoria(postagem, usuario);
+	}
 
 	@Transactional
 	public void deletarPostagem(Long turmaId, Usuario usuario, Long postagemId) {
