@@ -6,7 +6,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +19,7 @@ import br.com.projeto.educamais.controller.postagem.form.PostagemForm;
 import br.com.projeto.educamais.domain.Postagem;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.PostagemService;
+import br.com.projeto.educamais.util.Util;
 
 @RestController
 @RequestMapping("/educamais/turmas")
@@ -31,7 +31,7 @@ public class PostagemController {
 	@PostMapping("/{id}/postagem")
 	public ResponseEntity<Postagem> cadastrarPostagem(@RequestBody @Valid PostagemForm form, @PathVariable("id") Long idTurma, Principal principal) {
 		
-		Usuario usuarioLogado = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
 		Postagem postagem = postagemService.salvar(idTurma, usuarioLogado, form.getPostagem());
 		
@@ -41,7 +41,7 @@ public class PostagemController {
 	@PutMapping("/{turmaId}/postagem/{postagemId}")
 	public ResponseEntity<Postagem> atualizarPostagem(@RequestBody @Valid AtualizarPostagemForm form, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
-		Usuario usuarioLogado = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
 		postagemService.atualizarPostagem(turmaId, usuarioLogado, postagemId, form);
 		
@@ -51,7 +51,7 @@ public class PostagemController {
 	@DeleteMapping("/{turmaId}/postagem/{postagemId}")
 	public ResponseEntity<Postagem> deletarPostagem(@PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
-		Usuario usuarioLogado = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
 		postagemService.deletarPostagem(turmaId, usuarioLogado, postagemId);
 		

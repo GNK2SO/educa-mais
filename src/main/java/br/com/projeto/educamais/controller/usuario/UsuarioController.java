@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +20,7 @@ import br.com.projeto.educamais.controller.usuario.dto.UsuarioDTO;
 import br.com.projeto.educamais.controller.usuario.form.UsuarioForm;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.UsuarioService;
+import br.com.projeto.educamais.util.Util;
 
 @RestController
 @RequestMapping("/educamais/usuario")
@@ -45,11 +45,10 @@ public class UsuarioController {
 	@PutMapping
 	public ResponseEntity<Usuario> alterarNome(@RequestBody @Valid AlteraNomeForm form, Principal principal) {
 		
-		//Recuperando usuário logado
-		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-		usuario.setNome(form.getNome());
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
+		usuarioLogado.setNome(form.getNome());
 		
-		usuarioService.atualizarDados(usuario);
+		usuarioService.atualizarDados(usuarioLogado);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

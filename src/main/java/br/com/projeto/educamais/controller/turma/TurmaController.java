@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +27,7 @@ import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.service.TurmaService;
+import br.com.projeto.educamais.util.Util;
 
 @RestController
 @RequestMapping("/educamais/turmas")
@@ -37,26 +37,23 @@ public class TurmaController {
 	public TurmaService turmaService;
 	
 	@GetMapping
-	public ResponseEntity<List<ListaTurmaDTO>> obterTurmasUsuarioLogado(Principal pricipal) {
+	public ResponseEntity<List<ListaTurmaDTO>> obterTurmasUsuarioLogado(Principal principal) {
 		
-		//Recuperando usuário logado
-		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) pricipal).getPrincipal();
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		List<Turma> turmas = turmaService.obterTurmas(usuario);
+		List<Turma> turmas = turmaService.obterTurmas(usuarioLogado);
 		List<ListaTurmaDTO> turmasDTO = new ListaTurmaDTO().converter(turmas);
 		return ResponseEntity.status(HttpStatus.OK).body(turmasDTO);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<TurmaDTO> obterTurma(@PathVariable Long id, Principal pricipal) {
+	public ResponseEntity<TurmaDTO> obterTurma(@PathVariable Long id, Principal principal) {
 		
-		//Recuperando usuário logado
-		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) pricipal).getPrincipal();
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
 		Turma turma = turmaService.obterTurmaPorId(id);
 		
-		
-		if(turma.professorIsEqualTo(usuario) || turma.contains(usuario)) {
+		if(turma.professorIsEqualTo(usuarioLogado) || turma.contains(usuarioLogado)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new TurmaDTO(turma));
 		}
 		
@@ -64,10 +61,9 @@ public class TurmaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Turma> cadastrarTurma(@RequestBody @Valid TurmaForm form, Principal pricipal, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Turma> cadastrarTurma(@RequestBody @Valid TurmaForm form, Principal principal, UriComponentsBuilder uriBuilder) {
 		
-		//Recuperando usuário logado
-		Usuario professor = (Usuario) ((UsernamePasswordAuthenticationToken) pricipal).getPrincipal();
+		Usuario professor = Util.recuperarUsuarioLogado(principal);
 		
 		Turma turma = turmaService.salva(form.getTurma(professor));
 		
@@ -77,25 +73,23 @@ public class TurmaController {
 	}
 	
 	@PostMapping("/participar")
-	public ResponseEntity<Turma> participarTurma(@RequestBody @Valid ParticiparForm form, Principal pricipal) {
+	public ResponseEntity<Turma> participarTurma(@RequestBody @Valid ParticiparForm form, Principal principal) {
 		
-		//Recuperando usuário logado
-		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) pricipal).getPrincipal();
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
 		Turma turma = turmaService.obterTurmaPorCodigo(form.getCodigoTurma());
-		turmaService.participar(turma, usuario);
+		turmaService.participar(turma, usuarioLogado);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
 	@PostMapping("/{id}/sair")
-	public ResponseEntity<Turma> sairTurma(@PathVariable Long id, Principal pricipal) {
+	public ResponseEntity<Turma> sairTurma(@PathVariable Long id, Principal principal) {
 		
-		//Recuperando usuário logado
-		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) pricipal).getPrincipal();
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
 		Turma turma = turmaService.obterTurmaPorId(id);
-		turmaService.sairTurma(turma, usuario);
+		turmaService.sairTurma(turma, usuarioLogado);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -103,13 +97,12 @@ public class TurmaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Turma> alterarNome(@PathVariable Long id, @RequestBody @Valid AlteraNomeForm form, Principal principal) {
 		
-		//Recuperando usuário logado
-		Usuario usuario = (Usuario) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
 		Turma turma = turmaService.obterTurmaPorId(id);
 		turma.setNome(form.getNome());
 		
-		if(turma.professorIsNotEqualTo(usuario)) {
+		if(turma.professorIsNotEqualTo(usuarioLogado)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não tem permissão para alterar o nome da turma.");
 		}
 		
