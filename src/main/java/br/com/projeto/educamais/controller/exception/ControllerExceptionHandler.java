@@ -35,10 +35,10 @@ public class ControllerExceptionHandler {
     	return new ErroDTO("Conflito", HttpStatusCode.CONFLICT, exception.getMessage());
     }
 	
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = { EntidadeInexistenteException.class })
     public ErroDTO handle(EntidadeInexistenteException exception) {
-    	return new ErroDTO("Erro Requisição", HttpStatusCode.BAD_REQUEST, exception.getMessage());
+    	return new ErroDTO("Não Encontrado", HttpStatusCode.NOT_FOUND, exception.getMessage());
     }
 	
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
