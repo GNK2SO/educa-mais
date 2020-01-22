@@ -1,16 +1,13 @@
 package br.com.projeto.educamais.controller.turma;
 
-import static org.springframework.http.ResponseEntity.ok;
-import static org.springframework.http.ResponseEntity.created;
-
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.projeto.educamais.controller.generic.AlteraNomeForm;
+import br.com.projeto.educamais.controller.generic.form.AlteraNomeForm;
 import br.com.projeto.educamais.controller.turma.dto.ListaTurmaDTO;
 import br.com.projeto.educamais.controller.turma.dto.TurmaDTO;
 import br.com.projeto.educamais.controller.turma.form.ParticiparForm;
@@ -40,7 +37,6 @@ public class TurmaController {
 	public TurmaService turmaService;
 	
 	@GetMapping
-	@Transactional
 	public ResponseEntity<List<ListaTurmaDTO>> obterTurmasUsuarioLogado(Principal pricipal) {
 		
 		//Recuperando usuário logado
@@ -48,11 +44,10 @@ public class TurmaController {
 		
 		List<Turma> turmas = turmaService.obterTurmas(usuario);
 		List<ListaTurmaDTO> turmasDTO = new ListaTurmaDTO().converter(turmas);
-		return ok(turmasDTO);
+		return ResponseEntity.status(HttpStatus.OK).body(turmasDTO);
 	}
 	
 	@GetMapping("/{id}")
-	@Transactional
 	public ResponseEntity<TurmaDTO> obterTurma(@PathVariable Long id, Principal pricipal) {
 		
 		//Recuperando usuário logado
@@ -62,26 +57,26 @@ public class TurmaController {
 		
 		
 		if(turma.professorIsEqualTo(usuario) || turma.contains(usuario)) {
-			return ok(new TurmaDTO(turma));
+			return ResponseEntity.status(HttpStatus.OK).body(new TurmaDTO(turma));
 		}
 		
 		throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não participa turma.");
 	}
 	
 	@PostMapping
-	@Transactional
 	public ResponseEntity<Turma> cadastrarTurma(@RequestBody @Valid TurmaForm form, Principal pricipal, UriComponentsBuilder uriBuilder) {
 		
 		//Recuperando usuário logado
 		Usuario professor = (Usuario) ((UsernamePasswordAuthenticationToken) pricipal).getPrincipal();
 		
-		turmaService.salva(form.getTurma(professor));
-		URI uri = uriBuilder.build().toUri();
-		return created(uri).build();
+		Turma turma = turmaService.salva(form.getTurma(professor));
+		
+		URI uri = uriBuilder.path("/educamais/turmas/{id}").buildAndExpand(turma.getId()).toUri();
+		
+		return ResponseEntity.status(HttpStatus.CREATED).location(uri).build();
 	}
 	
 	@PostMapping("/participar")
-	@Transactional
 	public ResponseEntity<Turma> participarTurma(@RequestBody @Valid ParticiparForm form, Principal pricipal) {
 		
 		//Recuperando usuário logado
@@ -90,11 +85,10 @@ public class TurmaController {
 		Turma turma = turmaService.obterTurmaPorCodigo(form.getCodigoTurma());
 		turmaService.participar(turma, usuario);
 		
-		return ok().build();
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
 	@PostMapping("/{id}/sair")
-	@Transactional
 	public ResponseEntity<Turma> sairTurma(@PathVariable Long id, Principal pricipal) {
 		
 		//Recuperando usuário logado
@@ -103,11 +97,10 @@ public class TurmaController {
 		Turma turma = turmaService.obterTurmaPorId(id);
 		turmaService.sairTurma(turma, usuario);
 		
-		return ok().build();
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
 	@PutMapping("/{id}")
-	@Transactional
 	public ResponseEntity<Turma> alterarNome(@PathVariable Long id, @RequestBody @Valid AlteraNomeForm form, Principal principal) {
 		
 		//Recuperando usuário logado
@@ -121,6 +114,6 @@ public class TurmaController {
 		}
 		
 		turmaService.atualizarDados(turma);
-		return ok().build();
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }

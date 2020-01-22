@@ -1,16 +1,12 @@
 package br.com.projeto.educamais.controller.usuario;
 
-import static org.springframework.http.ResponseEntity.ok;
-import static org.springframework.http.ResponseEntity.created;
-
-import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.projeto.educamais.controller.generic.AlteraNomeForm;
+import br.com.projeto.educamais.controller.generic.form.AlteraNomeForm;
 import br.com.projeto.educamais.controller.usuario.dto.UsuarioDTO;
 import br.com.projeto.educamais.controller.usuario.form.UsuarioForm;
 import br.com.projeto.educamais.domain.Usuario;
@@ -38,19 +33,16 @@ public class UsuarioController {
 	public ResponseEntity<List<UsuarioDTO>> obterTodosUsuarios() {
 		List<Usuario> usuarios = usuarioService.ObterTodosUsuarios();
 		List<UsuarioDTO> listaUsuariosDTO =  new UsuarioDTO().converter(usuarios);
-		return ok(listaUsuariosDTO);
+		return ResponseEntity.status(HttpStatus.OK).body(listaUsuariosDTO);
 	}
 	
 	@PostMapping
-	@Transactional
-	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioForm form, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioForm form) {
 		usuarioService.salva(form.getUsuario());
-		URI uri = uriBuilder.build().toUri();
-		return created(uri).build();
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PutMapping
-	@Transactional
 	public ResponseEntity<Usuario> alterarNome(@RequestBody @Valid AlteraNomeForm form, Principal principal) {
 		
 		//Recuperando usuário logado
@@ -58,6 +50,7 @@ public class UsuarioController {
 		usuario.setNome(form.getNome());
 		
 		usuarioService.atualizarDados(usuario);
-		return ok().build();
+		
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }

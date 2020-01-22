@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import br.com.projeto.educamais.controller.exception.dto.ErroDTO;
 import br.com.projeto.educamais.controller.exception.dto.ErroFormularioDTO;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
+import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.exception.EntidadeExistenteException;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.ProfessorNaoPodeSerAlunoException;
@@ -31,13 +32,13 @@ public class ControllerExceptionHandler {
 	@ResponseStatus(code = HttpStatus.CONFLICT)
     @ExceptionHandler(value = { EntidadeExistenteException.class })
     public ErroDTO handle(EntidadeExistenteException exception) {
-    	return new ErroDTO("Conflito", 409, exception.getMessage());
+    	return new ErroDTO("Conflito", HttpStatusCode.CONFLICT, exception.getMessage());
     }
 	
-	@ResponseStatus(code = HttpStatus.CONFLICT)
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = { EntidadeInexistenteException.class })
     public ErroDTO handle(EntidadeInexistenteException exception) {
-    	return new ErroDTO("Erro Requisição", 400, exception.getMessage());
+    	return new ErroDTO("Erro Requisição", HttpStatusCode.BAD_REQUEST, exception.getMessage());
     }
 	
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -60,25 +61,25 @@ public class ControllerExceptionHandler {
 	@ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = { UsuarioNaoAutenticadoException.class })
     public ErroDTO handle(UsuarioNaoAutenticadoException exception) {
-    	return new ErroDTO("Acesso Negado", 403, exception.getMessage());
+    	return new ErroDTO("Acesso Negado", HttpStatusCode.FORBIDDEN, exception.getMessage());
     }
 	
 	@ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = { ProfessorNaoPodeSerAlunoException.class })
     public ErroDTO handle(ProfessorNaoPodeSerAlunoException exception) {
-    	return new ErroDTO("Acesso Negado", 403, exception.getMessage());
+    	return new ErroDTO("Acesso Negado", HttpStatusCode.FORBIDDEN, exception.getMessage());
     }
 	
 	@ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = { UsuarioJaEstaNaTurmaException.class })
     public ErroDTO handle(UsuarioJaEstaNaTurmaException exception) {
-    	return new ErroDTO("Acesso Negado", 403, exception.getMessage());
+    	return new ErroDTO("Acesso Negado", HttpStatusCode.FORBIDDEN, exception.getMessage());
     }
 
 	@ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = { UsuarioNaoTemPermissaoParaEssaAtividadeException.class })
     public ErroDTO handle(UsuarioNaoTemPermissaoParaEssaAtividadeException exception) {
-    	return new ErroDTO("Acesso Negado", 403, exception.getMessage());
+    	return new ErroDTO("Acesso Negado", HttpStatusCode.FORBIDDEN, exception.getMessage());
     }
 	
 }

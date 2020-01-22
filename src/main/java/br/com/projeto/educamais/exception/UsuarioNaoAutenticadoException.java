@@ -9,7 +9,7 @@ public class UsuarioNaoAutenticadoException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 	public UsuarioNaoAutenticadoException() {
-		super("Acesso Negado. Usuário não autenticado");
+		super("Usuário não está autenticado.");
 	}
 
 }

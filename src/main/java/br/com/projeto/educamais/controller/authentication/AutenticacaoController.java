@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.projeto.educamais.config.security.jwt.TokenService;
 import br.com.projeto.educamais.controller.authentication.dto.LoginDTO;
 import br.com.projeto.educamais.controller.authentication.form.LoginForm;
+import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 
 @RestController
 @RequestMapping("/auth")
@@ -37,7 +38,7 @@ public class AutenticacaoController {
 			String token = tokenService.gerarToken(authentication);
 			return ResponseEntity.ok(new LoginDTO(token));
 		} catch(AuthenticationException e) {
-			return ResponseEntity.badRequest().build();
+			throw new EntidadeInexistenteException("Falha ao autenticar. Usuário não está cadastrado.");
 		}
 	}
 }

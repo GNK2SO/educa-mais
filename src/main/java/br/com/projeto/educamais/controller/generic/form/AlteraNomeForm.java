@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.controller.generic;
+package br.com.projeto.educamais.controller.generic.form;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -25,7 +25,7 @@ public class PostagemService extends GenericService {
 	public PostagemRepository repository;
 	
 	@Transactional
-	public void salvar(Long turmaId, Usuario usuario, Postagem postagem) {
+	public Postagem salvar(Long turmaId, Usuario usuario, Postagem postagem) {
 		
 		Turma turma = turmaService.obterTurmaPorId(turmaId);
 		
@@ -38,6 +38,8 @@ public class PostagemService extends GenericService {
 		
 		turma.add(postagem);
 		turmaService.atualizarDados(turma);
+		
+		return postagem;
 	}
 	
 	@Transactional

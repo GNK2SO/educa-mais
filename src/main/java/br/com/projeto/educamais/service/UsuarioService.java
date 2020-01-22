@@ -35,6 +35,7 @@ public class UsuarioService extends GenericService {
 		usuarioRepository.save(usuario);
 	}
 
+	@Transactional
 	public Usuario buscarPorId(Long idUsuario) {
 		 Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
 		 if(usuario.isPresent()) {
@@ -43,6 +44,7 @@ public class UsuarioService extends GenericService {
 		 throw new EntidadeInexistenteException("Falha ao obter usuário. Usuário não está cadastrado.");
 	}
 	
+	@Transactional
 	public Usuario buscarPorEmail(String email) {
 		 Usuario usuario = usuarioRepository.findByEmail(email);
 		 
@@ -53,6 +55,7 @@ public class UsuarioService extends GenericService {
 		 throw new EntidadeInexistenteException("Falha ao obter usuário. Usuário não está cadastrado.");
 	}
 	
+	@Transactional
 	public void atualizarDados(Usuario usuario) {
 		preencherCamposAuditoria(usuario, usuario);
 	}

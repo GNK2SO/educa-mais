@@ -26,7 +26,7 @@ public class TurmaService extends GenericService {
 	public TurmaRepository turmaRepository;
 	
 	@Transactional
-	public void salva(Turma turma) {
+	public Turma salva(Turma turma) {
 		
 		if(turmaRepository.existsByNome(turma.getNome())) {
 			throw new EntidadeExistenteException("Falha ao cadastrar turma. Já existe uma turma cadastrada com esse nome.");
@@ -38,7 +38,7 @@ public class TurmaService extends GenericService {
 		}
 		
 		preencherCamposAuditoria(turma, turma.getProfessor());
-		turmaRepository.save(turma);
+		return turmaRepository.saveAndFlush(turma);
 	}
 	
 	@Transactional
