@@ -35,4 +35,10 @@ public class Postagem extends EntidadeAuditavel{
 	public void add(Arquivo arquivo) {
 		this.arquivos.add(arquivo);
 	}
+	public void remove(Arquivo arquivo) {
+		this.arquivos.remove(arquivo);
+	}
+	public boolean notContains(Arquivo arquivo) {
+		return !( this.arquivos.contains(arquivo) );
+	}
 }

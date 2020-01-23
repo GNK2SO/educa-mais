@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ import br.com.projeto.educamais.util.Storage;
 import br.com.projeto.educamais.util.Util;
 
 @RestController
-@RequestMapping("/educamais")
+@RequestMapping("/educamais/turmas")
 public class ArquivoController {
 
 	@Autowired
@@ -29,15 +30,30 @@ public class ArquivoController {
 	@Autowired
 	private ArquivoService service;
 	
-	@PostMapping("/postagem/{postagemId}/arquivo")
-	public ResponseEntity<Arquivo> uploadArquivo(@RequestParam MultipartFile[] arquivos, @PathVariable Long postagemId, Principal principal) {
+	@PostMapping("/{turmaId}/postagem/{postagemId}/arquivo")
+	public ResponseEntity<Arquivo> uploadArquivo(@RequestParam MultipartFile[] arquivos, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
 		
 		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		
 		List<Arquivo> arquivosSalvos = storage.upload(arquivos);
 		
-		service.salvar(postagemId, arquivosSalvos, usuario);
+		service.salvar(turmaId, postagemId, arquivosSalvos, usuario);
+		
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+	
+	@DeleteMapping("/{turmaId}/postagem/{postagemId}/arquivo/{arquivoId}")
+	public ResponseEntity<Arquivo> deletarArquivos(@PathVariable Long arquivoId, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
+		
+		
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
+		
+		Arquivo arquivo = service.obterPorId(arquivoId);
+		
+		service.deletar(turmaId, postagemId, arquivo, usuario);
+		
+		storage.deletar(arquivo);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

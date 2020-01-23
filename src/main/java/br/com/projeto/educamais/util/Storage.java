@@ -66,5 +66,12 @@ public class Storage {
 		return null;
 	}
 
+	public void deletar(Arquivo arquivo) {
+		File file = new File(System.getProperty("user.home") + DIR_UPLOADS + arquivo.getTitulo());
+		if(file != null) {
+			file.delete();
+		}
+	}
+
 
 }
