@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,10 +24,12 @@ import br.com.projeto.educamais.controller.turma.dto.ListaTurmaDTO;
 import br.com.projeto.educamais.controller.turma.dto.TurmaDTO;
 import br.com.projeto.educamais.controller.turma.form.ParticiparForm;
 import br.com.projeto.educamais.controller.turma.form.TurmaForm;
+import br.com.projeto.educamais.domain.Arquivo;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.service.TurmaService;
+import br.com.projeto.educamais.util.Storage;
 import br.com.projeto.educamais.util.Util;
 
 @RestController
@@ -35,6 +38,9 @@ public class TurmaController {
 
 	@Autowired
 	public TurmaService turmaService;
+	
+	@Autowired
+	public Storage storage;
 	
 	@GetMapping
 	public ResponseEntity<List<ListaTurmaDTO>> obterTurmasUsuarioLogado(Principal principal) {
@@ -107,6 +113,26 @@ public class TurmaController {
 		}
 		
 		turmaService.atualizarDados(turma);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Turma> deletarTurma(@PathVariable Long id, Principal principal) {
+		
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
+		
+		Turma turma = turmaService.obterTurmaPorId(id);
+		
+		if(turma.professorIsNotEqualTo(usuarioLogado)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não tem permissão para deletar turma.");
+		}
+		
+		List<Arquivo> arquivos = turmaService.deletar(turma);
+		
+		arquivos.stream().forEach(arquivo->{
+			storage.deletar(arquivo);
+		});
+		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }

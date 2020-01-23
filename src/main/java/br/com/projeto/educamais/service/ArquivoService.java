@@ -76,4 +76,5 @@ public class ArquivoService {
 		postagem.remove(arquivo);
 		postagemService.atualizarPostagem(postagem, usuario);
 	}
+	
 }

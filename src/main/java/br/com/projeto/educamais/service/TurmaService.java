@@ -1,5 +1,6 @@
 package br.com.projeto.educamais.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.projeto.educamais.domain.Arquivo;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeExistenteException;
@@ -90,5 +92,19 @@ public class TurmaService extends GenericService {
 		}
 		
 		turma.remove(usuario);
+	}
+
+	@Transactional
+	public List<Arquivo> deletar(Turma turma) {
+		List<Arquivo> arquivos = new ArrayList<Arquivo>();
+		
+		turma.getPostagens().stream().forEach(postagem -> {
+			arquivos.addAll(postagem.getArquivos());
+		});
+		
+		turma.removeAllAlunos();
+		turmaRepository.delete(turma);
+		
+		return arquivos;
 	}
 }
