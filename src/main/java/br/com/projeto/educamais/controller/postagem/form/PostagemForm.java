@@ -18,7 +18,6 @@ public class PostagemForm {
 	private String descricao;
 	
 	public Postagem getPostagem() {
-		new Postagem();
 		return Postagem.builder().titulo(this.titulo).descricao(this.descricao).build();
 	}
 }

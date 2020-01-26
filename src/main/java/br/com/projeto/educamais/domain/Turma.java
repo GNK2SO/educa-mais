@@ -1,6 +1,7 @@
 package br.com.projeto.educamais.domain;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -39,12 +40,20 @@ public class Turma extends EntidadeAuditavel {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Postagem> postagens;
 	
+	@OneToMany(fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Atividade> atividades;
+	
 	public void add(Usuario aluno) {
 		this.alunos.add(aluno);
 	}
 	
 	public void add(Postagem postagem) {
 		this.postagens.add(postagem);
+	}
+	
+	public void add(Atividade atividade) {
+		this.atividades.add(atividade);
 	}
 	
 	public void remove(Usuario aluno) {
@@ -66,7 +75,14 @@ public class Turma extends EntidadeAuditavel {
 	public boolean professorIsNotEqualTo(Usuario usuario) {
 		return !this.professor.equals(usuario);
 	}
+	
 	public void removeAllAlunos() {
 		this.alunos.clear();
+	}
+	
+	public Optional<Usuario> getAlunoPor(Long id) {
+		return this.alunos.stream()
+				.filter(aluno -> id == aluno.getId())
+				.findFirst();
 	}
 }
