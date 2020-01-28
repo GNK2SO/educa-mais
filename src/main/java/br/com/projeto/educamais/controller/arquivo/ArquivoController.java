@@ -49,7 +49,7 @@ public class ArquivoController {
 		
 		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		
-		Arquivo arquivo = service.obterPorId(arquivoId);
+		Arquivo arquivo = service.buscarPorId(arquivoId);
 		
 		service.deletar(turmaId, postagemId, arquivo, usuario);
 		

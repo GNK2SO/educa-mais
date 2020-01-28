@@ -32,13 +32,13 @@ public class ArquivoService {
 	@Transactional
 	public void salvar(Long turmaId, Long postagemId, List<Arquivo> arquivos, Usuario usuario) {
 		
-		Turma turma = turmaService.obterTurmaPorId(turmaId);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para deletar postagens.");
 		}
 		
-		Postagem postagem = postagemService.obterPorId(postagemId);
+		Postagem postagem = postagemService.buscarPorId(postagemId);
 		
 		for (Arquivo arquivo : arquivos) {
 			Arquivo arquivoSalvo = repository.saveAndFlush(arquivo);
@@ -49,7 +49,7 @@ public class ArquivoService {
 	}
 	
 	@Transactional
-	public Arquivo obterPorId(Long arquivoId) {
+	public Arquivo buscarPorId(Long arquivoId) {
 		
 		Optional<Arquivo> arquivo = repository.findById(arquivoId);
 		
@@ -62,13 +62,13 @@ public class ArquivoService {
 	@Transactional
 	public void deletar(Long turmaId, Long postagemId, Arquivo arquivo, Usuario usuario) {
 		
-		Turma turma = turmaService.obterTurmaPorId(turmaId);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para deletar postagens.");
 		}
 		
-		Postagem postagem = postagemService.obterPorId(postagemId);
+		Postagem postagem = postagemService.buscarPorId(postagemId);
 		
 		if(postagem.notContains(arquivo)) {
 			throw new EntidadeInexistenteException("Falha ao deletar arquivo. Este arquivo não está associado a postagem informada.");

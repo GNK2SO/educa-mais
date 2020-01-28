@@ -27,7 +27,7 @@ public class PostagemService extends GenericService {
 	@Transactional
 	public Postagem salvar(Long turmaId, Usuario usuario, Postagem postagem) {
 		
-		Turma turma = turmaService.obterTurmaPorId(turmaId);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para cadastrar postagens.");
@@ -43,7 +43,7 @@ public class PostagemService extends GenericService {
 	}
 	
 	@Transactional
-	public Postagem obterPorId(Long id) {
+	public Postagem buscarPorId(Long id) {
 		Optional<Postagem> postagem = repository.findById(id);
 		if(postagem.isPresent()) {
 			return postagem.get();
@@ -53,13 +53,13 @@ public class PostagemService extends GenericService {
 
 	@Transactional
 	public void atualizarPostagem(Long turmaId, Usuario usuario, Long postagemId, AtualizarPostagemForm form) {
-		Turma turma = turmaService.obterTurmaPorId(turmaId);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para alterar postagens.");
 		}
 		
-		Postagem postagem = obterPorId(postagemId);
+		Postagem postagem = buscarPorId(postagemId);
 		postagem.setTitulo(form.getTitulo());
 		postagem.setDescricao(form.getDescricao());
 		
@@ -74,13 +74,13 @@ public class PostagemService extends GenericService {
 
 	@Transactional
 	public void deletarPostagem(Long turmaId, Usuario usuario, Long postagemId) {
-		Turma turma = turmaService.obterTurmaPorId(turmaId);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para deletar postagens.");
 		}
 		
-		Postagem postagem = obterPorId(postagemId);
+		Postagem postagem = buscarPorId(postagemId);
 		
 		repository.deleteById(postagem.getId());
 	}

@@ -47,7 +47,7 @@ public class TurmaController {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		List<Turma> turmas = turmaService.obterTurmas(usuarioLogado);
+		List<Turma> turmas = turmaService.buscarTurmas(usuarioLogado);
 		List<ListaTurmaDTO> turmasDTO = new ListaTurmaDTO().converter(turmas);
 		return ResponseEntity.status(HttpStatus.OK).body(turmasDTO);
 	}
@@ -57,7 +57,7 @@ public class TurmaController {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Turma turma = turmaService.obterTurmaPorId(id);
+		Turma turma = turmaService.buscarTurmaPorId(id);
 		
 		if(turma.professorIsEqualTo(usuarioLogado) || turma.contains(usuarioLogado)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new TurmaDTO(turma));
@@ -83,7 +83,7 @@ public class TurmaController {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Turma turma = turmaService.obterTurmaPorCodigo(form.getCodigoTurma());
+		Turma turma = turmaService.buscarTurmaPorCodigo(form.getCodigoTurma());
 		turmaService.participar(turma, usuarioLogado);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -94,7 +94,7 @@ public class TurmaController {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Turma turma = turmaService.obterTurmaPorId(id);
+		Turma turma = turmaService.buscarTurmaPorId(id);
 		turmaService.sairTurma(turma, usuarioLogado);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -105,7 +105,7 @@ public class TurmaController {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Turma turma = turmaService.obterTurmaPorId(id);
+		Turma turma = turmaService.buscarTurmaPorId(id);
 		turma.setNome(form.getNome());
 		
 		if(turma.professorIsNotEqualTo(usuarioLogado)) {
@@ -121,7 +121,7 @@ public class TurmaController {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Turma turma = turmaService.obterTurmaPorId(id);
+		Turma turma = turmaService.buscarTurmaPorId(id);
 		
 		if(turma.professorIsNotEqualTo(usuarioLogado)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não tem permissão para deletar turma.");

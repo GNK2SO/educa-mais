@@ -44,12 +44,12 @@ public class TurmaService extends GenericService {
 	}
 	
 	@Transactional
-	public List<Turma> obterTurmas(Usuario usuario) {
+	public List<Turma> buscarTurmas(Usuario usuario) {
 		return turmaRepository.findByProfessorOrAlunosContaining(usuario, usuario);
 	}
 	
 	@Transactional
-	public Turma obterTurmaPorId(Long id) {
+	public Turma buscarTurmaPorId(Long id) {
 		Optional<Turma> turma = turmaRepository.findById(id);
 		if(turma.isPresent()) {
 			return turma.get();
@@ -58,7 +58,7 @@ public class TurmaService extends GenericService {
 	}
 	
 	@Transactional
-	public Turma obterTurmaPorCodigo(String codigo) {
+	public Turma buscarTurmaPorCodigo(String codigo) {
 		Optional<Turma> turma = turmaRepository.findByCodigo(codigo);
 		if(turma.isPresent()) {
 			return turma.get();

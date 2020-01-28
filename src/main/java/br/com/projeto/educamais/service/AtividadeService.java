@@ -33,7 +33,7 @@ public class AtividadeService extends GenericService {
 	@Transactional
 	public Atividade salvar(Long turmaId, Usuario usuario, Atividade atividade, List<Long> idAlunos) {
 		
-		Turma turma = turmaService.obterTurmaPorId(turmaId);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para cadastrar atividades.");
