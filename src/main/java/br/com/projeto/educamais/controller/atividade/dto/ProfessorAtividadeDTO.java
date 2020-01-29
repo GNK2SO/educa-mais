@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class AtividadeDTO {
+public class ProfessorAtividadeDTO {
 
 	private String titulo;
 	
@@ -25,7 +25,7 @@ public class AtividadeDTO {
 	
 	private List<Pergunta> perguntas;
 	
-	public AtividadeDTO(Atividade atividade) {
+	public ProfessorAtividadeDTO(Atividade atividade) {
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
@@ -37,9 +37,9 @@ public class AtividadeDTO {
 		this.perguntas = atividade.getPerguntas();
 	}
 
-	public List<AtividadeDTO> converter(List<Atividade> atividades) {
+	public List<ProfessorAtividadeDTO> converter(List<Atividade> atividades) {
 		return atividades.stream()
-				.map(atividade -> new AtividadeDTO(atividade))
+				.map(atividade -> new ProfessorAtividadeDTO(atividade))
 				.collect(Collectors.toList());
 	}
 

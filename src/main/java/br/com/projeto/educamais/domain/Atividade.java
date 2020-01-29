@@ -63,4 +63,11 @@ public class Atividade extends EntidadeAuditavel {
 		return this.dataEntrega.isAfter(LocalDate.now()) &&
 				this.tentativas > 0;
 	}
+	
+	public boolean pertenceAo(Usuario usuario) {
+		if(usuario == null) {
+			return false;
+		}
+		return this.aluno.equals(usuario);
+	}
 }

@@ -3,6 +3,7 @@ package br.com.projeto.educamais.domain;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -84,5 +85,11 @@ public class Turma extends EntidadeAuditavel {
 		return this.alunos.stream()
 				.filter(aluno -> id == aluno.getId())
 				.findFirst();
+	}
+	
+	public List<Atividade> getAtividadesFiltradasPor(Usuario aluno) {
+		return this.atividades.stream()
+				.filter(atividade -> atividade.pertenceAo(aluno))
+				.collect(Collectors.toList());
 	}
 }

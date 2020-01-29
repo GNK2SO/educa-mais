@@ -31,6 +31,16 @@ public class AtividadeService extends GenericService {
 	private PerguntaService perguntaService;
 	
 	@Transactional
+	public Turma buscarTurmaAtividades(Long turmaId, Usuario usuarioLogado) {
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
+		
+		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não participa turma.");
+		}
+		return turma;
+	}
+	
+	@Transactional
 	public Atividade salvar(Long turmaId, Usuario usuario, Atividade atividade, List<Long> idAlunos) {
 		
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);

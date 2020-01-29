@@ -24,6 +24,17 @@ public class PostagemService extends GenericService {
 	@Autowired
 	public PostagemRepository repository;
 	
+
+	@Transactional
+	public Turma buscarTurmaPostagens(Long turmaId, Usuario usuarioLogado) {
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
+		
+		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não participa turma.");
+		}
+		return turma;
+	}
+	
 	@Transactional
 	public Postagem salvar(Long turmaId, Usuario usuario, Postagem postagem) {
 		
@@ -84,5 +95,6 @@ public class PostagemService extends GenericService {
 		
 		repository.deleteById(postagem.getId());
 	}
+
 	
 }
