@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.projeto.educamais.controller.generic.form.AlteraNomeForm;
 import br.com.projeto.educamais.controller.turma.dto.ListaTurmaDTO;
-import br.com.projeto.educamais.controller.turma.dto.TurmaDTO;
+import br.com.projeto.educamais.controller.turma.dto.ParticipantesTurmaDTO;
 import br.com.projeto.educamais.controller.turma.form.ParticiparForm;
 import br.com.projeto.educamais.controller.turma.form.TurmaForm;
 import br.com.projeto.educamais.domain.Arquivo;
@@ -52,15 +52,15 @@ public class TurmaController {
 		return ResponseEntity.status(HttpStatus.OK).body(turmasDTO);
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<TurmaDTO> obterTurma(@PathVariable Long id, Principal principal) {
+	@GetMapping("/{id}/participantes")
+	public ResponseEntity<ParticipantesTurmaDTO> obterParticipantes(@PathVariable Long id, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
 		Turma turma = turmaService.buscarTurmaPorId(id);
 		
 		if(turma.professorIsEqualTo(usuarioLogado) || turma.contains(usuarioLogado)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new TurmaDTO(turma));
+			return ResponseEntity.status(HttpStatus.OK).body(new ParticipantesTurmaDTO(turma));
 		}
 		
 		throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não participa turma.");

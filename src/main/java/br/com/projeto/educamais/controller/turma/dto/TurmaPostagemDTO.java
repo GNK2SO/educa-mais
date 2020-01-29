@@ -1,6 +1,5 @@
 package br.com.projeto.educamais.controller.turma.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.projeto.educamais.controller.postagem.dto.PostagemDTO;
@@ -24,18 +23,5 @@ public class TurmaPostagemDTO {
 		this.setCodigo(turma.getCodigo());
 		this.setProfessor(new UsuarioDTO(turma.getProfessor()));
 		this.setPostagens(postagens);
-	}
-	
-	public List<TurmaDTO> fromTurmas(List<Turma> turmas) {
-		
-		List<TurmaDTO> turmasDTO = new ArrayList<TurmaDTO>();
-		TurmaDTO dto;
-		
-		for(Turma turma: turmas) {
-			dto = new TurmaDTO(turma);
-			turmasDTO.add(dto);
-		}
-		
-		return turmasDTO;
 	}
 }

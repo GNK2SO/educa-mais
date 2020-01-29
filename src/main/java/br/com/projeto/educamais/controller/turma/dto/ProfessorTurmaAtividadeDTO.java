@@ -1,6 +1,5 @@
 package br.com.projeto.educamais.controller.turma.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.projeto.educamais.controller.atividade.dto.ProfessorAtividadeDTO;
@@ -22,19 +21,5 @@ public class ProfessorTurmaAtividadeDTO extends TurmaAtividadeDTO {
 		List<ProfessorAtividadeDTO> atividades = new ProfessorAtividadeDTO().converter(turma.getAtividades());
 		this.setAlunos(alunos);
 		this.setAtividades(atividades);
-	}
-	
-	@Override
-	public List<TurmaDTO> fromTurmas(List<Turma> turmas) {
-		
-		List<TurmaDTO> turmasDTO = new ArrayList<TurmaDTO>();
-		TurmaDTO dto;
-		
-		for(Turma turma: turmas) {
-			dto = new TurmaDTO(turma);
-			turmasDTO.add(dto);
-		}
-		
-		return turmasDTO;
 	}
 }
