@@ -23,10 +23,10 @@ import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 public class AutenticacaoController {
 	
 	@Autowired
-	public AuthenticationManager authManager;
+	private AuthenticationManager authManager;
 	
 	@Autowired
-	public TokenService tokenService;
+	private TokenService tokenService;
 
 	@PostMapping
 	public ResponseEntity<LoginDTO> autenticar(@RequestBody @Valid LoginForm form) {

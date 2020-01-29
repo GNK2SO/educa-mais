@@ -37,10 +37,10 @@ import br.com.projeto.educamais.util.Util;
 public class TurmaController {
 
 	@Autowired
-	public TurmaService turmaService;
+	private TurmaService turmaService;
 	
 	@Autowired
-	public Storage storage;
+	private Storage storage;
 	
 	@GetMapping
 	public ResponseEntity<List<ListaTurmaDTO>> obterTurmasUsuarioLogado(Principal principal) {

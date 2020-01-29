@@ -30,7 +30,7 @@ import br.com.projeto.educamais.util.Util;
 public class PostagemController {
 
 	@Autowired
-	public PostagemService postagemService;
+	private PostagemService postagemService;
 	
 	@GetMapping("/{turmaId}/postagens")
 	public ResponseEntity<TurmaPostagemDTO> obterTurmaPostagens(@PathVariable Long turmaId, Principal principal) {

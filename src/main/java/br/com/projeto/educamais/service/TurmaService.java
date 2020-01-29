@@ -25,7 +25,7 @@ public class TurmaService extends GenericService {
 
 	
 	@Autowired
-	public TurmaRepository turmaRepository;
+	private TurmaRepository turmaRepository;
 	
 	@Transactional
 	public Turma salva(Turma turma) {

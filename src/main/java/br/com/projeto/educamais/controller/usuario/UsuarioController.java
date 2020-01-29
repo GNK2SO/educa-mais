@@ -27,7 +27,7 @@ import br.com.projeto.educamais.util.Util;
 public class UsuarioController {
 
 	@Autowired
-	public UsuarioService usuarioService;
+	private UsuarioService usuarioService;
 	
 	@GetMapping
 	public ResponseEntity<List<UsuarioDTO>> obterTodosUsuarios() {

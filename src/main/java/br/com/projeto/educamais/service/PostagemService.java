@@ -19,10 +19,10 @@ import br.com.projeto.educamais.repository.PostagemRepository;
 public class PostagemService extends GenericService {
 
 	@Autowired
-	public TurmaService turmaService;
+	private TurmaService turmaService;
 	
 	@Autowired
-	public PostagemRepository repository;
+	private PostagemRepository repository;
 	
 
 	@Transactional

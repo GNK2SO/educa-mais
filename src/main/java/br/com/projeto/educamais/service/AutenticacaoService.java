@@ -13,7 +13,7 @@ import br.com.projeto.educamais.repository.UsuarioRepository;
 public class AutenticacaoService implements UserDetailsService  {
 
 	@Autowired
-	public UsuarioRepository usuarioRepository;
+	private UsuarioRepository usuarioRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

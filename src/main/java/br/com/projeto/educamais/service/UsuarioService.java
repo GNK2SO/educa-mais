@@ -17,7 +17,7 @@ import br.com.projeto.educamais.repository.UsuarioRepository;
 public class UsuarioService extends GenericService {
 
 	@Autowired
-	public UsuarioRepository usuarioRepository;
+	private UsuarioRepository usuarioRepository;
 	
 	@Transactional
 	public List<Usuario> ObterTodosUsuarios() {
