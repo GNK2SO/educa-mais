@@ -18,9 +18,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class AlunoAtividadeDTO  {
 
+	private Long id;
+	
 	private String titulo;
 	
 	private String codigo;
+	
+	private double nota;
 	
 	private int tentativas;
 	
@@ -38,8 +42,10 @@ public class AlunoAtividadeDTO  {
 				.stream().map(pergunta -> new PerguntaDTO(pergunta))
 				.collect(Collectors.toList());
 		
+		this.id = atividade.getId();
 		this.titulo = atividade.getTitulo();
 		this.codigo = atividade.getCodigo();
+		this.nota = atividade.getNota();
 		this.tentativas = atividade.getTentativas();
 		this.habilitada = atividade.estaHabilitada();
 		this.dataEntrega = atividade.getDataEntrega().format(formatter);

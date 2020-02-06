@@ -19,6 +19,9 @@ public class PerguntaForm {
 	@NotNull @NotEmpty @Length(max = 512)
 	private String titulo;
 	
+	@NotNull
+	private double nota;
+	
 	@NotNull @NotEmpty @Size(min = 2, max = 5)
 	private List<AlternativaForm> alternativas;
 	
@@ -27,6 +30,6 @@ public class PerguntaForm {
 			.map(alternativa -> alternativa.getAlternativa())
 			.collect(Collectors.toList());
 		
-		return Pergunta.builder().titulo(titulo).alternativas(alternativas).build();
+		return Pergunta.builder().titulo(titulo).alternativas(alternativas).nota(nota).build();
 	}
 }

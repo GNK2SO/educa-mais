@@ -2,6 +2,7 @@ package br.com.projeto.educamais.domain;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -59,9 +61,16 @@ public class Atividade extends EntidadeAuditavel {
 		return this.perguntas.stream().mapToDouble(pergunta -> pergunta.getNota()).sum();
 	}
 	
+	public void diminuirTentativa() {
+		this.tentativas--;
+	}
+	
 	public boolean estaHabilitada() {
-		return this.dataEntrega.isAfter(LocalDate.now()) &&
-				this.tentativas > 0;
+		return this.dataEntrega.isAfter(LocalDate.now()) && this.tentativas > 0;
+	}
+	
+	public boolean naoEstaHabilitada() {
+		return !( estaHabilitada() );
 	}
 	
 	public boolean pertenceAo(Usuario usuario) {
@@ -69,5 +78,40 @@ public class Atividade extends EntidadeAuditavel {
 			return false;
 		}
 		return this.aluno.equals(usuario);
+	}
+	
+	public boolean naoPertenceAo(Usuario usuario) {
+		return !pertenceAo(usuario);
+	}
+
+	public void corrigir() {
+		double notaAluno = this.respostas.stream().mapToDouble(resposta -> {
+			
+			Optional<Pergunta> perguntaOptional = obterPerguntaPor(resposta.getPerguntaId());
+			
+			boolean isNotPresent = !perguntaOptional.isPresent();
+			
+			if(isNotPresent) {
+				throw new EntidadeInexistenteException("Pergunta não encontrada. A pergunta informada não está cadastrada.");
+			}
+			
+			Pergunta pergunta = perguntaOptional.get();
+			boolean isCorreta = pergunta.getAlternativaCorreta().getId() == resposta.getAlternativaId();
+			
+			if(isCorreta) {
+				return pergunta.getNota();
+			}
+			
+			return 0;
+			
+		}).sum();
+		
+		this.nota = notaAluno;
+	}
+	
+	public Optional<Pergunta> obterPerguntaPor(Long id) {
+		return this.perguntas.stream()
+				.filter(pergunta -> pergunta.getId() == id)
+				.findFirst();
 	}
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.projeto.educamais.domain.Atividade;
 import br.com.projeto.educamais.domain.Pergunta;
+import br.com.projeto.educamais.domain.Resposta;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
@@ -29,6 +30,9 @@ public class AtividadeService extends GenericService {
 	
 	@Autowired
 	private PerguntaService perguntaService;
+	
+	@Autowired
+	private RespostaService respostaService;
 	
 	@Transactional
 	public Turma buscarTurmaAtividades(Long turmaId, Usuario usuarioLogado) {
@@ -89,5 +93,45 @@ public class AtividadeService extends GenericService {
 		});
 		
 		return alunos;
+	}
+
+	@Transactional
+	public void submeterRespostas(List<Resposta> respostas, Long turmaId, Long atividadeId, Usuario usuarioLogado) {
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
+		
+		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não participa turma.");
+		}
+		
+		if(turma.professorIsEqualTo(usuarioLogado)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o aluno tem permissão para submeter as respostas da atividade.");
+		}
+		
+		Optional<Atividade> atividadeOptional = turma.getAtividadePor(atividadeId);
+		
+		if(atividadeOptional.isPresent()) {
+			Atividade atividade = atividadeOptional.get();
+			
+			if(atividade.naoPertenceAo(usuarioLogado)) {
+				throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Esta atividade não pertence a esse aluno.");
+			}
+			
+			if(atividade.naoEstaHabilitada()) {
+				throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Esta atividade não está habilitada.");
+			}
+			
+			
+			respostas = respostaService.salvar(respostas);
+			
+			atividade.diminuirTentativa();
+			atividade.setRespostas(respostas);
+			atividade.corrigir();
+			
+			repository.saveAndFlush(atividade);
+			
+		} else {
+			throw new EntidadeInexistenteException("Atividade não encontrada. A atividade informada está cadastrada.");
+		}
+		
 	}
 }

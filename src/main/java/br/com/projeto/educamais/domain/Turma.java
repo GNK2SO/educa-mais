@@ -87,6 +87,12 @@ public class Turma extends EntidadeAuditavel {
 				.findFirst();
 	}
 	
+	public Optional<Atividade> getAtividadePor(Long id) {
+		return this.atividades.stream()
+				.filter(atividade -> id == atividade.getId())
+				.findFirst();
+	}
+	
 	public List<Atividade> getAtividadesFiltradasPor(Usuario aluno) {
 		return this.atividades.stream()
 				.filter(atividade -> atividade.pertenceAo(aluno))

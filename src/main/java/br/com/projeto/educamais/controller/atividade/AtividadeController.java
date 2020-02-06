@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.projeto.educamais.controller.atividade.dto.ProfessorAtividadeDTO;
+import br.com.projeto.educamais.controller.atividade.dto.AtividadeDTO;
 import br.com.projeto.educamais.controller.atividade.form.AtividadeForm;
+import br.com.projeto.educamais.controller.atividade.form.ListaRespostaForm;
 import br.com.projeto.educamais.controller.turma.dto.AlunoTurmaAtividadeDTO;
 import br.com.projeto.educamais.controller.turma.dto.ProfessorTurmaAtividadeDTO;
 import br.com.projeto.educamais.controller.turma.dto.TurmaAtividadeDTO;
 import br.com.projeto.educamais.domain.Atividade;
+import br.com.projeto.educamais.domain.Resposta;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.AtividadeService;
@@ -52,7 +54,7 @@ public class AtividadeController {
 	}
 	
 	@PostMapping("{turmaId}/atividades")
-	public ResponseEntity<ProfessorAtividadeDTO> cadastrarAtividade(@RequestBody @Valid AtividadeForm form,  @PathVariable Long turmaId, Principal principal, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<AtividadeDTO> cadastrarAtividade(@RequestBody @Valid AtividadeForm form,  @PathVariable Long turmaId, Principal principal, UriComponentsBuilder uriBuilder) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
@@ -62,6 +64,18 @@ public class AtividadeController {
 		
 		URI uri = uriBuilder.path(path).build().toUri();
 		
-		return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(new ProfessorAtividadeDTO(atividade));
+		return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(new AtividadeDTO(atividade));
 	}
+	
+	
+	@PostMapping("{turmaId}/atividades/{atividadeId}/respostas")
+	public ResponseEntity<Atividade> submeterRespostas(@RequestBody @Valid ListaRespostaForm form, @PathVariable Long turmaId,  @PathVariable Long atividadeId, Principal principal) {
+		
+		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
+		
+		service.submeterRespostas(Resposta.fromRespostaForm(form.getRespostas()), turmaId, atividadeId, usuarioLogado);
+		
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+	
 }

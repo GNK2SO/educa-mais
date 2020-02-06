@@ -1,0 +1,33 @@
+version: "3"
+services:
+  db:
+    image: mysql
+    container_name: educa_mais_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=educa_mais
+    networks:
+      rede:
+        ipv4_address: 192.168.10.2
+  web:
+    build: .
+    container_name: educa_mais_app
+    expose: 
+      - 8082
+    ports: 
+      - 8080:8082
+    depends_on: 
+      - db
+    links: 
+      - db
+    networks:
+      rede:
+        ipv4_address: 192.168.10.3
+
+networks:
+    rede:
+      driver: bridge
+      ipam:
+        config:
+          - subnet: 192.168.10.0/8
+    
