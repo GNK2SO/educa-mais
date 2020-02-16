@@ -24,6 +24,7 @@ import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.PostagemService;
 import br.com.projeto.educamais.util.Util;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/educamais/turmas")
@@ -33,6 +34,7 @@ public class PostagemController {
 	private PostagemService postagemService;
 	
 	@GetMapping("/{turmaId}/postagens")
+	@ApiOperation(value = "Obter todas as postagens cadastradas que pertence a turma de id igual à {turmaId}.")
 	public ResponseEntity<TurmaPostagemDTO> obterTurmaPostagens(@PathVariable Long turmaId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
@@ -42,6 +44,7 @@ public class PostagemController {
 	
 	
 	@PostMapping("/{turmaId}/postagens")
+	@ApiOperation(value = "Cadastrar uma postagem que pertence a turma de id igual à {turmaId}.")
 	public ResponseEntity<PostagemDTO> cadastrarPostagem(@RequestBody @Valid PostagemForm form, @PathVariable Long turmaId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
@@ -52,6 +55,7 @@ public class PostagemController {
 	}
 	
 	@PutMapping("/{turmaId}/postagens/{postagemId}")
+	@ApiOperation(value = "Atualizar dados da postagem de id igual à {postagemId} que pertence a turma de id igual à {turmaId}.")
 	public ResponseEntity<Postagem> atualizarPostagem(@RequestBody @Valid AtualizarPostagemForm form, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
@@ -62,6 +66,7 @@ public class PostagemController {
 	}
 	
 	@DeleteMapping("/{turmaId}/postagens/{postagemId}")
+	@ApiOperation(value = "Deletar a postagem de id igual à {postagemId} que pertence a turma de id igual à {turmaId}.")
 	public ResponseEntity<Postagem> deletarPostagem(@PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);

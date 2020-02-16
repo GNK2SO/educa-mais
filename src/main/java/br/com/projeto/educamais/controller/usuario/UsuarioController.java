@@ -21,6 +21,7 @@ import br.com.projeto.educamais.controller.usuario.form.UsuarioForm;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.UsuarioService;
 import br.com.projeto.educamais.util.Util;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/educamais/usuario")
@@ -37,12 +38,14 @@ public class UsuarioController {
 	}
 	
 	@PostMapping
+	@ApiOperation(value = "Cadastrar uma novo usuário.")
 	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioForm form) {
 		usuarioService.salva(form.getUsuario());
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PutMapping
+	@ApiOperation(value = "Alterar o nome do usuário autenticado.")
 	public ResponseEntity<Usuario> alterarNome(@RequestBody @Valid AlteraNomeForm form, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);

@@ -31,6 +31,7 @@ import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividad
 import br.com.projeto.educamais.service.TurmaService;
 import br.com.projeto.educamais.util.Storage;
 import br.com.projeto.educamais.util.Util;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/educamais/turmas")
@@ -43,6 +44,7 @@ public class TurmaController {
 	private Storage storage;
 	
 	@GetMapping
+	@ApiOperation(value = "Obter todas as turmas relacionadas ao usuário autenticado, seja como professor ou aluno.")
 	public ResponseEntity<List<ListaTurmaDTO>> obterTurmasUsuarioLogado(Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
@@ -52,12 +54,13 @@ public class TurmaController {
 		return ResponseEntity.status(HttpStatus.OK).body(turmasDTO);
 	}
 	
-	@GetMapping("/{id}/participantes")
-	public ResponseEntity<ParticipantesTurmaDTO> obterParticipantes(@PathVariable Long id, Principal principal) {
+	@GetMapping("/{turmaId}/participantes")
+	@ApiOperation(value = "Obter todos os alunos da turma de id igual à {turmaId}.")
+	public ResponseEntity<ParticipantesTurmaDTO> obterParticipantes(@PathVariable Long turmaId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Turma turma = turmaService.buscarTurmaPorId(id);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsEqualTo(usuarioLogado) || turma.contains(usuarioLogado)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new ParticipantesTurmaDTO(turma));
@@ -67,6 +70,7 @@ public class TurmaController {
 	}
 	
 	@PostMapping
+	@ApiOperation(value = "Cadastrar uma nova turma e relacionar o usuário autenticado como professor.")
 	public ResponseEntity<Turma> cadastrarTurma(@RequestBody @Valid TurmaForm form, Principal principal, UriComponentsBuilder uriBuilder) {
 		
 		Usuario professor = Util.recuperarUsuarioLogado(principal);
@@ -79,6 +83,7 @@ public class TurmaController {
 	}
 	
 	@PostMapping("/participar")
+	@ApiOperation(value = "Relacionar o usuário autenticado a turma de id igual à {turmaId} como aluno.")
 	public ResponseEntity<Turma> participarTurma(@RequestBody @Valid ParticiparForm form, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
@@ -89,23 +94,25 @@ public class TurmaController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
-	@PostMapping("/{id}/sair")
-	public ResponseEntity<Turma> sairTurma(@PathVariable Long id, Principal principal) {
+	@PostMapping("/{turmaId}/sair")
+	@ApiOperation(value = "Remover relação entre usuário autenticado e turma de id igual à {turmaId}.")
+	public ResponseEntity<Turma> sairTurma(@PathVariable Long turmaId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Turma turma = turmaService.buscarTurmaPorId(id);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		turmaService.sairTurma(turma, usuarioLogado);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
-	@PutMapping("/{id}")
-	public ResponseEntity<Turma> alterarNome(@PathVariable Long id, @RequestBody @Valid AlteraNomeForm form, Principal principal) {
+	@PutMapping("/{turmaId}")
+	@ApiOperation(value = "Atualizar dados da turma de id igual à {turmaId}.")
+	public ResponseEntity<Turma> alterarNome(@PathVariable Long turmaId, @RequestBody @Valid AlteraNomeForm form, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Turma turma = turmaService.buscarTurmaPorId(id);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		turma.setNome(form.getNome());
 		
 		if(turma.professorIsNotEqualTo(usuarioLogado)) {
@@ -116,12 +123,13 @@ public class TurmaController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Turma> deletarTurma(@PathVariable Long id, Principal principal) {
+	@DeleteMapping("/{turmaId}")
+	@ApiOperation(value = "Remover turma de id igual à {turmaId}.")
+	public ResponseEntity<Turma> deletarTurma(@PathVariable Long turmaId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Turma turma = turmaService.buscarTurmaPorId(id);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuarioLogado)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não tem permissão para deletar turma.");

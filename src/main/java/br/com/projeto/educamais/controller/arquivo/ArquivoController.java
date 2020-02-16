@@ -19,6 +19,7 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.ArquivoService;
 import br.com.projeto.educamais.util.Storage;
 import br.com.projeto.educamais.util.Util;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/educamais/turmas")
@@ -31,6 +32,7 @@ public class ArquivoController {
 	private ArquivoService service;
 	
 	@PostMapping("/{turmaId}/postagem/{postagemId}/arquivo")
+	@ApiOperation(value = "Upload de arquivos anexados ao formulário de uma postagem.")
 	public ResponseEntity<Arquivo> uploadArquivo(@RequestParam MultipartFile[] arquivos, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
 		
@@ -44,6 +46,7 @@ public class ArquivoController {
 	}
 	
 	@DeleteMapping("/{turmaId}/postagem/{postagemId}/arquivo/{arquivoId}")
+	@ApiOperation(value = "Remoção de arquivos anexados a uma postagem.")
 	public ResponseEntity<Arquivo> deletarArquivos(@PathVariable Long arquivoId, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
 		

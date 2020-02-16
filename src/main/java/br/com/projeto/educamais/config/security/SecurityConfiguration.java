@@ -32,6 +32,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Autowired
 	public UsuarioService usuarioService;
 	
+	private static final String[] AUTH_WHITELIST = { "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/routes/**", "/favicon.ico" };
+
+	
 	@Override
 	@Bean
 	protected AuthenticationManager authenticationManager() throws Exception {
@@ -45,7 +48,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 			.passwordEncoder(new BCryptPasswordEncoder());
 	}
 	
-	
 	//CONFIGURAÇÕES DE AUTORIZAÇÃO
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -58,6 +60,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/auth").permitAll()
 				.antMatchers(HttpMethod.POST, "/educamais/usuario").permitAll()
+				.antMatchers(HttpMethod.GET, "/v2/api-docs").permitAll()
+				.antMatchers(AUTH_WHITELIST).permitAll()
 			.anyRequest().authenticated();
 	}
 	

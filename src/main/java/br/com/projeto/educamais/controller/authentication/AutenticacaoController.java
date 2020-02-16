@@ -17,6 +17,7 @@ import br.com.projeto.educamais.config.security.jwt.TokenService;
 import br.com.projeto.educamais.controller.authentication.dto.LoginDTO;
 import br.com.projeto.educamais.controller.authentication.form.LoginForm;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,6 +30,7 @@ public class AutenticacaoController {
 	private TokenService tokenService;
 
 	@PostMapping
+	@ApiOperation(value = "Autenticação da conta de um usuário.")
 	public ResponseEntity<LoginDTO> autenticar(@RequestBody @Valid LoginForm form) {
 		
 		UsernamePasswordAuthenticationToken dadosLogin = form.getUsuario();

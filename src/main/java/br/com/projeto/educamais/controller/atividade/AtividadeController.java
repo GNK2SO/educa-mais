@@ -29,6 +29,7 @@ import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.AtividadeService;
 import br.com.projeto.educamais.util.Util;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/educamais/turmas")
@@ -38,6 +39,7 @@ public class AtividadeController {
 	private AtividadeService service;
 	
 	@GetMapping("/{turmaId}/atividades")
+	@ApiOperation(value = "Obter todas as atividades cadastradas que pertence a turma de id igual à {turmaId}.")
 	public ResponseEntity<TurmaAtividadeDTO> obterTurmaPostagens(@PathVariable Long turmaId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
@@ -54,6 +56,7 @@ public class AtividadeController {
 	}
 	
 	@PostMapping("{turmaId}/atividades")
+	@ApiOperation(value = "Cadastrar uma atividade que pertence a turma de id igual à {turmaId}.")
 	public ResponseEntity<AtividadeDTO> cadastrarAtividade(@RequestBody @Valid AtividadeForm form,  @PathVariable Long turmaId, Principal principal, UriComponentsBuilder uriBuilder) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
@@ -69,6 +72,7 @@ public class AtividadeController {
 	
 	
 	@PostMapping("{turmaId}/atividades/{atividadeId}/respostas")
+	@ApiOperation(value = "Submeter as repostas da atividade de id igual à {atividadeId} que pertence a turma de id igual à {turmaId}.")
 	public ResponseEntity<Atividade> submeterRespostas(@RequestBody @Valid ListaRespostaForm form, @PathVariable Long turmaId,  @PathVariable Long atividadeId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
