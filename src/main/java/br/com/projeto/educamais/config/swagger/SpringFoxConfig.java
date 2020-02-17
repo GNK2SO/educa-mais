@@ -26,12 +26,14 @@ public class SpringFoxConfig  extends WebMvcConfigurationSupport {
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("br.com.projeto.educamais.controller"))
 				.paths(PathSelectors.any())
-				.build().apiInfo(apiEndPointsInfo());
+				.build().apiInfo(apiEndPointsInfo())
+				.useDefaultResponseMessages(false);
 
 	}
 
 	private ApiInfo apiEndPointsInfo() {
-		return new ApiInfoBuilder().title("Spring Boot REST API")
+		return new ApiInfoBuilder()
+				.title("Spring Boot REST API")
 				.contact(new Contact("Gabriel Neves", "", "gabryelneves9@gmail.com"))
 				.version("1.0.0")
 				.build();
@@ -40,7 +42,6 @@ public class SpringFoxConfig  extends WebMvcConfigurationSupport {
 	@Override
 	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-
 		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 

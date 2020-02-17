@@ -14,6 +14,8 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.PostagemRepository;
+import br.com.projeto.educamais.util.messages.PostagemErrors;
+import br.com.projeto.educamais.util.messages.TurmaErrors;
 
 @Service
 public class PostagemService extends GenericService {
@@ -26,12 +28,13 @@ public class PostagemService extends GenericService {
 	
 
 	@Transactional
-	public Turma buscarTurmaPostagens(Long turmaId, Usuario usuarioLogado) {
+	public Turma buscarPostagensTurma(Long turmaId, Usuario usuarioLogado) {
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não participa turma.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_NOT_PARTICIPATE);
 		}
+		
 		return turma;
 	}
 	
@@ -41,7 +44,7 @@ public class PostagemService extends GenericService {
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para cadastrar postagens.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_SALVAR_POSTAGEM);
 		}
 		
 		preencherCamposAuditoria(postagem, turma.getProfessor());
@@ -59,7 +62,7 @@ public class PostagemService extends GenericService {
 		if(postagem.isPresent()) {
 			return postagem.get();
 		}
-		throw new EntidadeInexistenteException("Falha ao obter postagem. Postagem não está cadastrada.");
+		throw new EntidadeInexistenteException(PostagemErrors.NOT_FOUND);
 	}
 
 	@Transactional
@@ -67,7 +70,7 @@ public class PostagemService extends GenericService {
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para alterar postagens.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_ATUALIZAR_POSTAGEM);
 		}
 		
 		Postagem postagem = buscarPorId(postagemId);
@@ -88,7 +91,7 @@ public class PostagemService extends GenericService {
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para deletar postagens.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_REMOVER_POSTAGEM);
 		}
 		
 		Postagem postagem = buscarPorId(postagemId);

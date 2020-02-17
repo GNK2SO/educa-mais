@@ -32,7 +32,7 @@ public class AtividadeForm {
 	@NotNull @NotEmpty
 	private String dataEntrega;
 	
-	public Atividade getAtividade() {
+	public Atividade toAtividade() {
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate dataEntregaLocalDate = LocalDate.parse(dataEntrega, formatter);

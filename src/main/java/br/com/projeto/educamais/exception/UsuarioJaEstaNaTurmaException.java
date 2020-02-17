@@ -8,7 +8,9 @@ public class UsuarioJaEstaNaTurmaException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	
+	public static final String message = "Acesso Negado. Usuário já está participando da turma.";
+	
 	public UsuarioJaEstaNaTurmaException() {
-		super("Acesso Negado. Usuário já está participando da turma.");
+		super(message);
 	}
 }

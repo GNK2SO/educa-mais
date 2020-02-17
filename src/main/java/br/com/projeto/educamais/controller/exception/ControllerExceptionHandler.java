@@ -19,6 +19,7 @@ import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividad
 import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.exception.EntidadeExistenteException;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
+import br.com.projeto.educamais.exception.FalhaUploadArquivoException;
 import br.com.projeto.educamais.exception.ProfessorNaoPodeSerAlunoException;
 import br.com.projeto.educamais.exception.UsuarioJaEstaNaTurmaException;
 import br.com.projeto.educamais.exception.UsuarioNaoAutenticadoException;
@@ -80,6 +81,12 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(value = { UsuarioNaoTemPermissaoParaEssaAtividadeException.class })
     public ErroDTO handle(UsuarioNaoTemPermissaoParaEssaAtividadeException exception) {
     	return new ErroDTO("Acesso Negado", HttpStatusCode.FORBIDDEN, exception.getMessage());
+    }
+	
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = { FalhaUploadArquivoException.class })
+    public ErroDTO handle(FalhaUploadArquivoException exception) {
+    	return new ErroDTO("Falha Requisição", HttpStatusCode.BAD_REQUEST, exception.getMessage());
     }
 	
 }

@@ -19,6 +19,8 @@ import br.com.projeto.educamais.exception.ProfessorNaoPodeSerAlunoException;
 import br.com.projeto.educamais.exception.UsuarioJaEstaNaTurmaException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.TurmaRepository;
+import br.com.projeto.educamais.util.Storage;
+import br.com.projeto.educamais.util.messages.TurmaErrors;
 
 @Service
 public class TurmaService extends GenericService {
@@ -27,11 +29,14 @@ public class TurmaService extends GenericService {
 	@Autowired
 	private TurmaRepository turmaRepository;
 	
+	@Autowired
+	private Storage storage;
+	
 	@Transactional
 	public Turma salva(Turma turma) {
 		
 		if(turmaRepository.existsByNome(turma.getNome())) {
-			throw new EntidadeExistenteException("Falha ao cadastrar turma. Já existe uma turma cadastrada com esse nome.");
+			throw new EntidadeExistenteException(TurmaErrors.CONFLICT);
 		}
 		
 		if(turmaRepository.existsByCodigo(turma.getCodigo())) {
@@ -54,7 +59,7 @@ public class TurmaService extends GenericService {
 		if(turma.isPresent()) {
 			return turma.get();
 		}
-		throw new EntidadeInexistenteException("Falha ao obter turma. Turma não está cadastrada.");
+		throw new EntidadeInexistenteException(TurmaErrors.NOT_FOUND);
 	}
 	
 	@Transactional
@@ -63,12 +68,24 @@ public class TurmaService extends GenericService {
 		if(turma.isPresent()) {
 			return turma.get();
 		}
-		throw new EntidadeInexistenteException("Falha ao obter turma. Turma não está cadastrada.");
+		throw new EntidadeInexistenteException(TurmaErrors.NOT_FOUND);
 	}
-	
 	
 	@Transactional
 	public void atualizarDados(Turma turma) {
+		preencherCamposAuditoria(turma, turma.getProfessor());
+	}
+	
+	@Transactional
+	public void alterarNome(Long turmaId, String novoNomeTurma, Usuario usuario) {
+		
+		Turma turma = buscarTurmaPorId(turmaId);
+		turma.setNome(novoNomeTurma);
+		
+		if(turma.professorIsNotEqualTo(usuario)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_ATUALIZAR_TURMA);
+		}
+		
 		preencherCamposAuditoria(turma, turma.getProfessor());
 	}
 
@@ -88,23 +105,32 @@ public class TurmaService extends GenericService {
 	@Transactional
 	public void sairTurma(Turma turma, Usuario usuario) {
 		if(turma.notContains(usuario)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Falha ao sair da turma. Usuário não participa dessa turma.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_SAIR_TURMA);
 		}
 		
 		turma.remove(usuario);
 	}
 
 	@Transactional
-	public List<Arquivo> deletar(Turma turma) {
+	public void deletar(Long turmaId, Usuario usuario) {
+		
+		Turma turma = buscarTurmaPorId(turmaId);
+		
+		if(turma.professorIsNotEqualTo(usuario)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_REMOVER_TURMA);
+		}
+		
 		List<Arquivo> arquivos = new ArrayList<Arquivo>();
 		
 		turma.getPostagens().stream().forEach(postagem -> {
 			arquivos.addAll(postagem.getArquivos());
 		});
 		
+		arquivos.stream().forEach(arquivo->{
+			storage.deletar(arquivo);
+		});
+		
 		turma.removeAllAlunos();
 		turmaRepository.delete(turma);
-		
-		return arquivos;
 	}
 }

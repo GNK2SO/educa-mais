@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 public class TurmaPostagemDTO {
 	private Long id;
-	private String nome;
-	private String codigo;
+	private String nomeTurma;
+	private String codigoTurma;
 	private UsuarioDTO professor;
 	private List<PostagemDTO> postagens;
 	
@@ -19,8 +19,8 @@ public class TurmaPostagemDTO {
 		List<PostagemDTO> postagens = new PostagemDTO().converter(turma.getPostagens());
 		
 		this.setId(turma.getId());
-		this.setNome(turma.getNome());
-		this.setCodigo(turma.getCodigo());
+		this.setNomeTurma(turma.getNome());
+		this.setCodigoTurma(turma.getCodigo());
 		this.setProfessor(new UsuarioDTO(turma.getProfessor()));
 		this.setPostagens(postagens);
 	}

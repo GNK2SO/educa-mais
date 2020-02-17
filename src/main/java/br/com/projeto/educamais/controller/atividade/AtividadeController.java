@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,8 +29,13 @@ import br.com.projeto.educamais.domain.Resposta;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.AtividadeService;
+import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.util.Util;
+import br.com.projeto.educamais.util.messages.AtividadeErrors;
+import br.com.projeto.educamais.util.messages.TurmaErrors;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/educamais/turmas")
@@ -40,6 +46,10 @@ public class AtividadeController {
 	
 	@GetMapping("/{turmaId}/atividades")
 	@ApiOperation(value = "Obter todas as atividades cadastradas que pertence a turma de id igual à {turmaId}.")
+	@ApiResponses({
+		@ApiResponse(code = HttpStatusCode.FORBIDDEN, message = TurmaErrors.FORBIDDEN_NOT_PARTICIPATE),
+		@ApiResponse(code = HttpStatusCode.NOT_FOUND, message = TurmaErrors.NOT_FOUND)
+	})
 	public ResponseEntity<TurmaAtividadeDTO> obterTurmaPostagens(@PathVariable Long turmaId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
@@ -56,12 +66,17 @@ public class AtividadeController {
 	}
 	
 	@PostMapping("{turmaId}/atividades")
+	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Cadastrar uma atividade que pertence a turma de id igual à {turmaId}.")
+	@ApiResponses({
+		@ApiResponse(code = HttpStatusCode.FORBIDDEN, message = AtividadeErrors.FORBIDDEN_SALVAR_ATIVIDADE + "\n" + TurmaErrors.FORBIDDEN_NOT_PARTICIPATE),
+		@ApiResponse(code = HttpStatusCode.NOT_FOUND, message = TurmaErrors.NOT_FOUND)
+	})
 	public ResponseEntity<AtividadeDTO> cadastrarAtividade(@RequestBody @Valid AtividadeForm form,  @PathVariable Long turmaId, Principal principal, UriComponentsBuilder uriBuilder) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Atividade atividade = service.salvar(turmaId, usuarioLogado, form.getAtividade(), form.getIdAlunos());
+		Atividade atividade = service.salvar(turmaId, usuarioLogado, form.toAtividade(), form.getIdAlunos());
 		
 		String path = String.format("/educamais/turmas/%d/atividade/%s", turmaId, atividade.getCodigo());
 		
@@ -72,14 +87,24 @@ public class AtividadeController {
 	
 	
 	@PostMapping("{turmaId}/atividades/{atividadeId}/respostas")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ApiOperation(value = "Submeter as repostas da atividade de id igual à {atividadeId} que pertence a turma de id igual à {turmaId}.")
-	public ResponseEntity<Atividade> submeterRespostas(@RequestBody @Valid ListaRespostaForm form, @PathVariable Long turmaId,  @PathVariable Long atividadeId, Principal principal) {
+	@ApiResponses({
+		@ApiResponse(
+			code = HttpStatusCode.FORBIDDEN, 
+			message = TurmaErrors.FORBIDDEN_NOT_PARTICIPATE + "\n" + 
+					AtividadeErrors.FORBIDDEN_PROFESSOR_SUBMIT_RESPOSTA + "\n" + 
+					AtividadeErrors.FORBIDDEN_ATIVIDADE_NOT_PERTENCE_TO_ALUNO + "\n" +
+					AtividadeErrors.FORBIDDEN_ATIVIDADE_DESABILITADA + "\n" +
+					AtividadeErrors.FORBIDDEN_ATIVIDADE_NOT_PERTENCE_TO_TURMA
+		),
+		@ApiResponse(code = HttpStatusCode.NOT_FOUND, message = TurmaErrors.NOT_FOUND)
+	})
+	public ResponseEntity<Void> submeterRespostas(@RequestBody @Valid ListaRespostaForm form, @PathVariable Long turmaId,  @PathVariable Long atividadeId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		
 		service.submeterRespostas(Resposta.fromRespostaForm(form.getRespostas()), turmaId, atividadeId, usuarioLogado);
-		
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
 }

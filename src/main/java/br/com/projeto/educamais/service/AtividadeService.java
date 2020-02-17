@@ -18,6 +18,8 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.AtividadeRepository;
+import br.com.projeto.educamais.util.messages.AtividadeErrors;
+import br.com.projeto.educamais.util.messages.TurmaErrors;
 
 @Service
 public class AtividadeService extends GenericService {
@@ -50,7 +52,7 @@ public class AtividadeService extends GenericService {
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para cadastrar atividades.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(AtividadeErrors.FORBIDDEN_SALVAR_ATIVIDADE);
 		}
 		
 		List<Usuario> alunos = getAlunosBy(idAlunos, turma);
@@ -82,12 +84,9 @@ public class AtividadeService extends GenericService {
 			Optional<Usuario> aluno = turma.getAlunoPor(alunoId);
 			
 			if(aluno.isPresent()) {
-				
 				alunos.add(aluno.get());
-				
 			} else {
-				
-				throw new EntidadeInexistenteException("Aluno não encontrado. O aluno informado não está participando da turma.");
+				throw new EntidadeInexistenteException(TurmaErrors.FORBIDDEN_NOT_PARTICIPATE);
 			}
 			
 		});
@@ -100,11 +99,11 @@ public class AtividadeService extends GenericService {
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não participa turma.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_NOT_PARTICIPATE);
 		}
 		
 		if(turma.professorIsEqualTo(usuarioLogado)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o aluno tem permissão para submeter as respostas da atividade.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(AtividadeErrors.FORBIDDEN_PROFESSOR_SUBMIT_RESPOSTA);
 		}
 		
 		Optional<Atividade> atividadeOptional = turma.getAtividadePor(atividadeId);
@@ -113,11 +112,11 @@ public class AtividadeService extends GenericService {
 			Atividade atividade = atividadeOptional.get();
 			
 			if(atividade.naoPertenceAo(usuarioLogado)) {
-				throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Esta atividade não pertence a esse aluno.");
+				throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(AtividadeErrors.FORBIDDEN_ATIVIDADE_NOT_PERTENCE_TO_ALUNO);
 			}
 			
 			if(atividade.naoEstaHabilitada()) {
-				throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Esta atividade não está habilitada.");
+				throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(AtividadeErrors.FORBIDDEN_ATIVIDADE_DESABILITADA);
 			}
 			
 			
@@ -130,7 +129,7 @@ public class AtividadeService extends GenericService {
 			repository.saveAndFlush(atividade);
 			
 		} else {
-			throw new EntidadeInexistenteException("Atividade não encontrada. A atividade informada está cadastrada.");
+			throw new EntidadeInexistenteException(AtividadeErrors.FORBIDDEN_ATIVIDADE_NOT_PERTENCE_TO_TURMA);
 		}
 		
 	}

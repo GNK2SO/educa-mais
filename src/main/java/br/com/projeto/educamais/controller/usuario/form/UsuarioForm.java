@@ -19,7 +19,7 @@ public class UsuarioForm {
 	@NotNull @NotEmpty @Length(min = 8, max = 16)
 	public String senha;
 	
-	public Usuario getUsuario() 
+	public Usuario toUsuario() 
 	{
 		Usuario usuario = new Usuario();
 		

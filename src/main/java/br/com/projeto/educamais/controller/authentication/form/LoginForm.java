@@ -31,7 +31,7 @@ public class LoginForm {
 		this.senha = senha;
 	}
 	
-	public UsernamePasswordAuthenticationToken getUsuario() {
+	public UsernamePasswordAuthenticationToken toUsuario() {
 		return new UsernamePasswordAuthenticationToken(this.email, this.senha);
 	}
 }

@@ -17,7 +17,7 @@ public class PostagemForm {
 	@NotEmpty @NotNull @Length(max = 512)
 	private String descricao;
 	
-	public Postagem getPostagem() {
+	public Postagem toPostagem() {
 		return Postagem.builder().titulo(this.titulo).descricao(this.descricao).build();
 	}
 }

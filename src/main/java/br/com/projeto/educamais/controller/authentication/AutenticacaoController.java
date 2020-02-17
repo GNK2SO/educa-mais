@@ -17,7 +17,11 @@ import br.com.projeto.educamais.config.security.jwt.TokenService;
 import br.com.projeto.educamais.controller.authentication.dto.LoginDTO;
 import br.com.projeto.educamais.controller.authentication.form.LoginForm;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
+import br.com.projeto.educamais.util.HttpStatusCode;
+import br.com.projeto.educamais.util.messages.AutenticacaoErrors;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,16 +35,19 @@ public class AutenticacaoController {
 
 	@PostMapping
 	@ApiOperation(value = "Autenticação da conta de um usuário.")
+	@ApiResponses({
+		@ApiResponse(code = HttpStatusCode.NOT_FOUND, message = AutenticacaoErrors.NOT_FOUND)
+	})
 	public ResponseEntity<LoginDTO> autenticar(@RequestBody @Valid LoginForm form) {
 		
-		UsernamePasswordAuthenticationToken dadosLogin = form.getUsuario();
+		UsernamePasswordAuthenticationToken dadosLogin = form.toUsuario();
 		
 		try {
 			Authentication authentication = authManager.authenticate(dadosLogin);
 			String token = tokenService.gerarToken(authentication);
 			return ResponseEntity.ok(new LoginDTO(token));
 		} catch(AuthenticationException e) {
-			throw new EntidadeInexistenteException("Falha ao autenticar. Usuário não está cadastrado.");
+			throw new EntidadeInexistenteException(AutenticacaoErrors.NOT_FOUND);
 		}
 	}
 }

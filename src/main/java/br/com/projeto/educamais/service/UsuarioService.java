@@ -12,6 +12,7 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeExistenteException;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.repository.UsuarioRepository;
+import br.com.projeto.educamais.util.messages.UsuarioErrors;
 
 @Service
 public class UsuarioService extends GenericService {
@@ -28,7 +29,7 @@ public class UsuarioService extends GenericService {
 	public void salva(Usuario usuario) {
 		
 		if(usuarioRepository.existsByEmail(usuario.getEmail())) {
-			throw new EntidadeExistenteException("Falha ao cadastrar usuário. Já existe um usuário cadastrado com esse e-mail.");
+			throw new EntidadeExistenteException(UsuarioErrors.CONFLICT);
 		}
 		
 		preencherCamposAuditoria(usuario, usuario);
@@ -41,7 +42,7 @@ public class UsuarioService extends GenericService {
 		 if(usuario.isPresent()) {
 			 return usuario.get();
 		 }
-		 throw new EntidadeInexistenteException("Falha ao obter usuário. Usuário não está cadastrado.");
+		 throw new EntidadeInexistenteException(UsuarioErrors.NOT_FOUND);
 	}
 	
 	@Transactional
@@ -52,7 +53,7 @@ public class UsuarioService extends GenericService {
 			 return usuario;
 		 }
 		 
-		 throw new EntidadeInexistenteException("Falha ao obter usuário. Usuário não está cadastrado.");
+		 throw new EntidadeInexistenteException(UsuarioErrors.NOT_FOUND);
 	}
 	
 	@Transactional

@@ -15,6 +15,8 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.ArquivoRepository;
+import br.com.projeto.educamais.util.messages.ArquivoErrors;
+import br.com.projeto.educamais.util.messages.PostagemErrors;
 
 @Service
 public class ArquivoService {
@@ -35,7 +37,7 @@ public class ArquivoService {
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para deletar postagens.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_REMOVER_POSTAGEM);
 		}
 		
 		Postagem postagem = postagemService.buscarPorId(postagemId);
@@ -56,7 +58,7 @@ public class ArquivoService {
 		if(arquivo.isPresent()) {
 			return arquivo.get();
 		}
-		throw new EntidadeInexistenteException("Falha ao obter arquivo. Arquivo não está cadastrado.");
+		throw new EntidadeInexistenteException(ArquivoErrors.NOT_FOUND);
 	}
 
 	@Transactional
@@ -65,15 +67,17 @@ public class ArquivoService {
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Apenas o professor tem permissão para deletar postagens.");
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_REMOVER_POSTAGEM);
 		}
 		
 		Postagem postagem = postagemService.buscarPorId(postagemId);
 		
 		if(postagem.notContains(arquivo)) {
-			throw new EntidadeInexistenteException("Falha ao deletar arquivo. Este arquivo não está associado a postagem informada.");
+			throw new EntidadeInexistenteException(ArquivoErrors.FORBIDDEN_REMOVER_BY_INVALID_POSTAGEM);
 		}
+		
 		postagem.remove(arquivo);
+		
 		postagemService.atualizarPostagem(postagem, usuario);
 	}
 	
