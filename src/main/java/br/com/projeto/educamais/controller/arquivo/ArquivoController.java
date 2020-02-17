@@ -31,7 +31,7 @@ public class ArquivoController {
 	@Autowired
 	private ArquivoService service;
 	
-	@PostMapping("/{turmaId}/postagem/{postagemId}/arquivo")
+	@PostMapping("/{turmaId}/postagens/{postagemId}/arquivo")
 	@ApiOperation(value = "Upload de arquivos anexados ao formulário de uma postagem.")
 	public ResponseEntity<Arquivo> uploadArquivo(@RequestParam MultipartFile[] arquivos, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
@@ -45,7 +45,7 @@ public class ArquivoController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
-	@DeleteMapping("/{turmaId}/postagem/{postagemId}/arquivo/{arquivoId}")
+	@DeleteMapping("/{turmaId}/postagens/{postagemId}/arquivo/{arquivoId}")
 	@ApiOperation(value = "Remoção de arquivos anexados a uma postagem.")
 	public ResponseEntity<Arquivo> deletarArquivos(@PathVariable Long arquivoId, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
