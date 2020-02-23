@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
@@ -28,6 +29,9 @@ public class Postagem extends EntidadeAuditavel{
 	
 	@Column(length = 512)
 	private String descricao;
+	
+	@ManyToOne
+	private Turma turma;
 	
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<Arquivo> arquivos;

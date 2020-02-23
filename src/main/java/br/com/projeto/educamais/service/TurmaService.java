@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.projeto.educamais.domain.Arquivo;
+import br.com.projeto.educamais.domain.Postagem;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeExistenteException;
@@ -28,6 +29,9 @@ public class TurmaService extends GenericService {
 	
 	@Autowired
 	private TurmaRepository turmaRepository;
+	
+	@Autowired
+	private PostagemService postagemService;
 	
 	@Autowired
 	private Storage storage;
@@ -120,9 +124,10 @@ public class TurmaService extends GenericService {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_REMOVER_TURMA);
 		}
 		
+		List<Postagem> postagens = postagemService.buscarPorTurma(turma, usuario);
 		List<Arquivo> arquivos = new ArrayList<Arquivo>();
 		
-		turma.getPostagens().stream().forEach(postagem -> {
+		postagens.stream().forEach(postagem -> {
 			arquivos.addAll(postagem.getArquivos());
 		});
 		

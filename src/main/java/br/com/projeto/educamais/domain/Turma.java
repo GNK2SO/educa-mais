@@ -31,15 +31,11 @@ public class Turma extends EntidadeAuditavel {
 	@Column(length = 8)
 	private String codigo = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	private Usuario professor;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	private List<Usuario> alunos;
-	
-	@OneToMany(fetch = FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
-	private List<Postagem> postagens;
 	
 	@OneToMany(fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
@@ -47,10 +43,6 @@ public class Turma extends EntidadeAuditavel {
 	
 	public void add(Usuario aluno) {
 		this.alunos.add(aluno);
-	}
-	
-	public void add(Postagem postagem) {
-		this.postagens.add(postagem);
 	}
 	
 	public void add(Atividade atividade) {

@@ -1,5 +1,6 @@
 package br.com.projeto.educamais.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -20,38 +21,20 @@ import br.com.projeto.educamais.util.messages.TurmaErrors;
 @Service
 public class PostagemService extends GenericService {
 
-	@Autowired
-	private TurmaService turmaService;
 	
 	@Autowired
 	private PostagemRepository repository;
 	
-
 	@Transactional
-	public Turma buscarPostagensTurma(Long turmaId, Usuario usuarioLogado) {
-		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		
-		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
-			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_NOT_PARTICIPATE);
-		}
-		
-		return turma;
-	}
-	
-	@Transactional
-	public Postagem salvar(Long turmaId, Usuario usuario, Postagem postagem) {
-		
-		Turma turma = turmaService.buscarTurmaPorId(turmaId);
+	public Postagem salvar(Turma turma, Usuario usuario, Postagem postagem) {
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_SALVAR_POSTAGEM);
 		}
 		
 		preencherCamposAuditoria(postagem, turma.getProfessor());
+		postagem.setTurma(turma);
 		postagem = repository.saveAndFlush(postagem);
-		
-		turma.add(postagem);
-		turmaService.atualizarDados(turma);
 		
 		return postagem;
 	}
@@ -64,10 +47,19 @@ public class PostagemService extends GenericService {
 		}
 		throw new EntidadeInexistenteException(PostagemErrors.NOT_FOUND);
 	}
+	
+	@Transactional
+	public List<Postagem> buscarPorTurma(Turma turma, Usuario usuarioLogado) {
+		
+		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_NOT_PARTICIPATE);
+		}
+		
+		return repository.findAllByTurma(turma);
+	}
 
 	@Transactional
-	public void atualizarPostagem(Long turmaId, Usuario usuario, Long postagemId, AtualizarPostagemForm form) {
-		Turma turma = turmaService.buscarTurmaPorId(turmaId);
+	public void atualizarPostagem(Turma turma, Usuario usuario, Long postagemId, AtualizarPostagemForm form) {
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_ATUALIZAR_POSTAGEM);
@@ -87,9 +79,8 @@ public class PostagemService extends GenericService {
 	}
 
 	@Transactional
-	public void deletarPostagem(Long turmaId, Usuario usuario, Long postagemId) {
-		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		
+	public void deletarPostagem(Turma turma, Usuario usuario, Long postagemId) {
+
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_REMOVER_POSTAGEM);
 		}
