@@ -34,16 +34,16 @@ public class AtividadeService extends GenericService {
 	private RespostaService respostaService;
 	
 	@Transactional
-	public List<Atividade> buscarPorTurma(Turma turma, Usuario usuarioLogado) {
-		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
+	public List<Atividade> buscarPorTurma(Turma turma, Usuario usuario) {
+		if(turma.professorIsNotEqualTo(usuario) && turma.notContains(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException("Usuário não participa turma.");
 		}
 		
-		if(turma.professorIsEqualTo(usuarioLogado))
+		if(turma.professorIsEqualTo(usuario))
 		{
 			return repository.findAllByTurma(turma);
 		}
-		return repository.findAllByAluno(usuarioLogado);
+		return repository.findAllByAluno(usuario);
 	}
 	
 	@Transactional
@@ -100,13 +100,13 @@ public class AtividadeService extends GenericService {
 	}
 
 	@Transactional
-	public void submeterRespostas(List<Resposta> respostas, Turma turma, Long atividadeId, Usuario usuarioLogado) {
+	public void submeterRespostas(List<Resposta> respostas, Turma turma, Long atividadeId, Usuario usuario) {
 		
-		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
+		if(turma.professorIsNotEqualTo(usuario) && turma.notContains(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_NOT_PARTICIPATE);
 		}
 		
-		if(turma.professorIsEqualTo(usuarioLogado)) {
+		if(turma.professorIsEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(AtividadeErrors.FORBIDDEN_PROFESSOR_SUBMIT_RESPOSTA);
 		}
 		
@@ -117,7 +117,7 @@ public class AtividadeService extends GenericService {
 			throw new EntidadeInexistenteException(AtividadeErrors.FORBIDDEN_ATIVIDADE_NOT_PERTENCE_TO_TURMA);
 		}
 		
-		if(atividade.naoPertenceAo(usuarioLogado)) {
+		if(atividade.naoPertenceAo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(AtividadeErrors.FORBIDDEN_ATIVIDADE_NOT_PERTENCE_TO_ALUNO);
 		}
 		

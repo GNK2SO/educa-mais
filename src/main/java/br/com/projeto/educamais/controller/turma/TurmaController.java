@@ -49,10 +49,10 @@ public class TurmaController {
 	@ApiOperation(value = "Obter todas as turmas relacionadas ao usuário autenticado, seja como professor ou aluno.")
 	public ResponseEntity<List<ListaTurmaDTO>> obterTurmasUsuarioLogado(Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		
-		List<Turma> turmas = turmaService.buscarTurmas(usuarioLogado);
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
+		List<Turma> turmas = turmaService.buscarTurmas(usuario);
 		List<ListaTurmaDTO> turmasDTO = new ListaTurmaDTO().converter(turmas);
+		
 		return ResponseEntity.status(HttpStatus.OK).body(turmasDTO);
 	}
 	
@@ -64,11 +64,10 @@ public class TurmaController {
 	})
 	public ResponseEntity<ParticipantesTurmaDTO> obterParticipantes(@PathVariable Long turmaId, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 		
-		if(turma.professorIsEqualTo(usuarioLogado) || turma.contains(usuarioLogado)) {
+		if(turma.professorIsEqualTo(usuario) || turma.contains(usuario)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new ParticipantesTurmaDTO(turma));
 		}
 		
@@ -85,9 +84,7 @@ public class TurmaController {
 	public ResponseEntity<Void> cadastrarTurma(@RequestBody @Valid TurmaForm form, Principal principal, UriComponentsBuilder uriBuilder) {
 		
 		Usuario professor = Util.recuperarUsuarioLogado(principal);
-		
 		Turma turma = turmaService.salva(form.getTurma(professor));
-		
 		URI uri = uriBuilder.path("/educamais/turmas/{id}").buildAndExpand(turma.getId()).toUri();
 		
 		return ResponseEntity.status(HttpStatus.CREATED).location(uri).build();
@@ -103,10 +100,9 @@ public class TurmaController {
 	})
 	public ResponseEntity<Void> participarTurma(@RequestBody @Valid ParticiparForm form, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorCodigo(form.getCodigoTurma());
-		turmaService.participar(turma, usuarioLogado);
+		turmaService.participar(turma, usuario);
 		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -121,10 +117,9 @@ public class TurmaController {
 	})
 	public ResponseEntity<Void> sairTurma(@PathVariable Long turmaId, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		turmaService.sairTurma(turma, usuarioLogado);
+		turmaService.sairTurma(turma, usuario);
 		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -138,8 +133,10 @@ public class TurmaController {
 		@ApiResponse(code = HttpStatusCode.NOT_FOUND, message = TurmaErrors.NOT_FOUND)
 	})
 	public ResponseEntity<Void> alterarNome(@PathVariable Long turmaId, @RequestBody @Valid AlteraNomeForm form, Principal principal) {
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		turmaService.alterarNome(turmaId, form.getNome(), usuarioLogado);
+		
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
+		turmaService.alterarNome(turmaId, form.getNome(), usuario);
+		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
@@ -152,8 +149,10 @@ public class TurmaController {
 		@ApiResponse(code = HttpStatusCode.NOT_FOUND, message = TurmaErrors.NOT_FOUND)
 	})
 	public ResponseEntity<Void> deletarTurma(@PathVariable Long turmaId, Principal principal) {
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		turmaService.deletar(turmaId, usuarioLogado);
+		
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
+		turmaService.deletar(turmaId, usuario);
+		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

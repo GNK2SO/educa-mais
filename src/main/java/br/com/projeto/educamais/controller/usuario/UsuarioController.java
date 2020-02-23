@@ -39,7 +39,9 @@ public class UsuarioController {
 		@ApiResponse(code = HttpStatusCode.CONFLICT, message = UsuarioErrors.CONFLICT)
 	})
 	public ResponseEntity<Void> cadastrarUsuario(@RequestBody @Valid UsuarioForm form) {
+		
 		usuarioService.salva(form.toUsuario());
+		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
@@ -48,10 +50,9 @@ public class UsuarioController {
 	@ApiOperation(value = "Alterar o nome do usuário autenticado.")
 	public ResponseEntity<Void> alterarNome(@RequestBody @Valid AlteraNomeForm form, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		usuarioLogado.setNome(form.getNome());
-		
-		usuarioService.atualizarDados(usuarioLogado);
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
+		usuario.setNome(form.getNome());		
+		usuarioService.atualizarDados(usuario);
 		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}

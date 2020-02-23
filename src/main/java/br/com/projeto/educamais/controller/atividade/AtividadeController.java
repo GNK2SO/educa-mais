@@ -56,15 +56,15 @@ public class AtividadeController {
 	})
 	public ResponseEntity<TurmaAtividadeDTO> obterTurmaPostagens(@PathVariable Long turmaId, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
 
-		if(turma.professorIsEqualTo(usuarioLogado)) {
-			List<Atividade> atividades = service.buscarPorTurma(turma, usuarioLogado);
+		if(turma.professorIsEqualTo(usuario)) {
+			List<Atividade> atividades = service.buscarPorTurma(turma, usuario);
 			return ResponseEntity.status(HttpStatus.OK).body(new ProfessorTurmaAtividadeDTO(turma, atividades));
 		}
 		
-		List<Atividade> atividades = service.buscarPorTurma(turma, usuarioLogado);
+		List<Atividade> atividades = service.buscarPorTurma(turma, usuario);
 		return ResponseEntity.status(HttpStatus.OK).body(new AlunoTurmaAtividadeDTO(turma, atividades));
 	}
 	
@@ -77,14 +77,11 @@ public class AtividadeController {
 	})
 	public ResponseEntity<AtividadeDTO> cadastrarAtividade(@RequestBody @Valid AtividadeForm form,  @PathVariable Long turmaId, Principal principal, UriComponentsBuilder uriBuilder) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);	
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		
-		Atividade atividade = service.salvar(turma, usuarioLogado, form.toAtividade(), form.getIdAlunos());
+		Atividade atividade = service.salvar(turma, usuario, form.toAtividade(), form.getIdAlunos());
 		
 		String path = String.format("/educamais/turmas/%d/atividade/%s", turmaId, atividade.getCodigo());
-		
 		URI uri = uriBuilder.path(path).build().toUri();
 		
 		return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(new AtividadeDTO(atividade));
@@ -107,9 +104,10 @@ public class AtividadeController {
 	})
 	public ResponseEntity<Void> submeterRespostas(@RequestBody @Valid ListaRespostaForm form, @PathVariable Long turmaId,  @PathVariable Long atividadeId, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		service.submeterRespostas(Resposta.fromRespostaForm(form.getRespostas()), turma, atividadeId, usuarioLogado);
+		service.submeterRespostas(Resposta.fromRespostaForm(form.getRespostas()), turma, atividadeId, usuario);
+		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	

@@ -49,9 +49,7 @@ public class ArquivoController {
 	public ResponseEntity<Void> uploadArquivo(@RequestParam MultipartFile[] arquivos, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
 		Usuario usuario = Util.recuperarUsuarioLogado(principal);
-		
 		List<Arquivo> arquivosSalvos = storage.upload(arquivos);
-		
 		service.salvar(turmaId, postagemId, arquivosSalvos, usuario);
 		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -66,13 +64,9 @@ public class ArquivoController {
 	})
 	public ResponseEntity<Void> deletarArquivos(@PathVariable Long arquivoId, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
-		
 		Usuario usuario = Util.recuperarUsuarioLogado(principal);
-		
 		Arquivo arquivo = service.buscarPorId(arquivoId);
-		
 		service.deletar(turmaId, postagemId, arquivo, usuario);
-		
 		storage.deletar(arquivo);
 		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

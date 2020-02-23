@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,11 +51,12 @@ public class PostagemController {
 		@ApiResponse(code = HttpStatusCode.FORBIDDEN, message = TurmaErrors.FORBIDDEN_NOT_PARTICIPATE),
 		@ApiResponse(code = HttpStatusCode.NOT_FOUND, message = TurmaErrors.NOT_FOUND)
 	})
-	public ResponseEntity<TurmaPostagemDTO> obterPostagensTurma(@PathVariable Long turmaId, Principal principal) {
+	public ResponseEntity<TurmaPostagemDTO> obterPostagensTurma(@PathVariable Long turmaId, @RequestParam(value = "page", defaultValue = "0") int pageNumber, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		List<Postagem> postagens = postagemService.buscarPorTurma(turma, usuarioLogado);
+		List<Postagem> postagens = postagemService.buscarPostagensPageablePorTurma(turma, pageNumber, usuario);
+		
 		return ResponseEntity.status(HttpStatus.OK).body(new TurmaPostagemDTO(turma, postagens));
 	}
 	
@@ -68,9 +70,10 @@ public class PostagemController {
 	})
 	public ResponseEntity<PostagemDTO> cadastrarPostagem(@RequestBody @Valid PostagemForm form, @PathVariable Long turmaId, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		Postagem postagem = postagemService.salvar(turma, usuarioLogado, form.toPostagem());
+		Postagem postagem = postagemService.salvar(turma, usuario, form.toPostagem());
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(new PostagemDTO(postagem));
 	}
 	
@@ -83,9 +86,10 @@ public class PostagemController {
 	})
 	public ResponseEntity<Void> atualizarPostagem(@RequestBody @Valid AtualizarPostagemForm form, @PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		postagemService.atualizarPostagem(turma, usuarioLogado, postagemId, form);
+		postagemService.atualizarPostagem(turma, usuario, postagemId, form);
+		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
@@ -98,9 +102,10 @@ public class PostagemController {
 	})
 	public ResponseEntity<Void> deletarPostagem(@PathVariable Long turmaId, @PathVariable Long postagemId, Principal principal) {
 		
-		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
+		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		postagemService.deletarPostagem(turma, usuarioLogado, postagemId);
+		postagemService.deletarPostagem(turma, usuario, postagemId);
+		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

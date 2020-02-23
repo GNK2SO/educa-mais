@@ -1,11 +1,14 @@
 package br.com.projeto.educamais.service;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import br.com.projeto.educamais.controller.postagem.form.AtualizarPostagemForm;
@@ -49,13 +52,26 @@ public class PostagemService extends GenericService {
 	}
 	
 	@Transactional
-	public List<Postagem> buscarPorTurma(Turma turma, Usuario usuarioLogado) {
+	public List<Postagem> buscarPorTurma(Turma turma, Usuario usuario) {
 		
-		if(turma.professorIsNotEqualTo(usuarioLogado) && turma.notContains(usuarioLogado)) {
+		if(turma.professorIsNotEqualTo(usuario) && turma.notContains(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_NOT_PARTICIPATE);
 		}
 		
 		return repository.findAllByTurma(turma);
+	}
+	
+	@Transactional
+	public List<Postagem> buscarPostagensPageablePorTurma(Turma turma, int pageNumber, Usuario usuario) {
+		
+		if(turma.professorIsNotEqualTo(usuario) && turma.notContains(usuario)) {
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(TurmaErrors.FORBIDDEN_NOT_PARTICIPATE);
+		}
+		
+		Pageable page = (Pageable) PageRequest.of(pageNumber, 20);
+		Page<Postagem> postagens = repository.findAllByTurma(turma, page);
+		
+		return postagens.getContent();
 	}
 
 	@Transactional
