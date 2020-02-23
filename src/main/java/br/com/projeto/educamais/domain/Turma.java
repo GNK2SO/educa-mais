@@ -3,17 +3,16 @@ package br.com.projeto.educamais.domain;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,19 +33,12 @@ public class Turma extends EntidadeAuditavel {
 	@ManyToOne
 	private Usuario professor;
 	
-	@ManyToMany
-	private List<Usuario> alunos;
-	
-	@OneToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
-	private List<Atividade> atividades;
+	private List<Usuario> alunos;
 	
 	public void add(Usuario aluno) {
 		this.alunos.add(aluno);
-	}
-	
-	public void add(Atividade atividade) {
-		this.atividades.add(atividade);
 	}
 	
 	public void remove(Usuario aluno) {
@@ -77,17 +69,5 @@ public class Turma extends EntidadeAuditavel {
 		return this.alunos.stream()
 				.filter(aluno -> id == aluno.getId())
 				.findFirst();
-	}
-	
-	public Optional<Atividade> getAtividadePor(Long id) {
-		return this.atividades.stream()
-				.filter(atividade -> id == atividade.getId())
-				.findFirst();
-	}
-	
-	public List<Atividade> getAtividadesFiltradasPor(Usuario aluno) {
-		return this.atividades.stream()
-				.filter(atividade -> atividade.pertenceAo(aluno))
-				.collect(Collectors.toList());
 	}
 }

@@ -104,6 +104,10 @@ public class TurmaService extends GenericService {
 		}
 		
 		turma.add(usuario);
+		
+		preencherCamposAuditoria(turma, usuario);
+		
+		turmaRepository.saveAndFlush(turma);
 	}
 
 	@Transactional

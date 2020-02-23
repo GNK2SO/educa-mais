@@ -50,6 +50,9 @@ public class Atividade extends EntidadeAuditavel {
 	@Column
 	private int tentativas;
 	
+	@ManyToOne
+	private Turma turma;
+	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Pergunta> perguntas;
 	
@@ -113,5 +116,13 @@ public class Atividade extends EntidadeAuditavel {
 		return this.perguntas.stream()
 				.filter(pergunta -> pergunta.getId() == id)
 				.findFirst();
+	}
+
+	public boolean turmaIsNotEqualsTo(Turma turma) {
+		if(this.turma == null)
+		{
+			return false;
+		}
+		return this.turma.equals(turma);
 	}
 }

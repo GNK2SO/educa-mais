@@ -29,6 +29,7 @@ import br.com.projeto.educamais.domain.Resposta;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.AtividadeService;
+import br.com.projeto.educamais.service.TurmaService;
 import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.util.Util;
 import br.com.projeto.educamais.util.messages.AtividadeErrors;
@@ -44,6 +45,9 @@ public class AtividadeController {
 	@Autowired
 	private AtividadeService service;
 	
+	@Autowired
+	private TurmaService turmaService;
+	
 	@GetMapping("/{turmaId}/atividades")
 	@ApiOperation(value = "Obter todas as atividades cadastradas que pertence a turma de id igual à {turmaId}.")
 	@ApiResponses({
@@ -53,16 +57,15 @@ public class AtividadeController {
 	public ResponseEntity<TurmaAtividadeDTO> obterTurmaPostagens(@PathVariable Long turmaId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		Turma turma = service.buscarTurmaAtividades(turmaId, usuarioLogado);
-		
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
+
 		if(turma.professorIsEqualTo(usuarioLogado)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new ProfessorTurmaAtividadeDTO(turma));
+			List<Atividade> atividades = service.buscarPorTurma(turma, usuarioLogado);
+			return ResponseEntity.status(HttpStatus.OK).body(new ProfessorTurmaAtividadeDTO(turma, atividades));
 		}
 		
-		List<Atividade> atividadesFiltradas = turma.getAtividadesFiltradasPor(usuarioLogado);
-		turma.setAtividades(atividadesFiltradas);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(new AlunoTurmaAtividadeDTO(turma));
+		List<Atividade> atividades = service.buscarPorTurma(turma, usuarioLogado);
+		return ResponseEntity.status(HttpStatus.OK).body(new AlunoTurmaAtividadeDTO(turma, atividades));
 	}
 	
 	@PostMapping("{turmaId}/atividades")
@@ -76,7 +79,9 @@ public class AtividadeController {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
 		
-		Atividade atividade = service.salvar(turmaId, usuarioLogado, form.toAtividade(), form.getIdAlunos());
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
+		
+		Atividade atividade = service.salvar(turma, usuarioLogado, form.toAtividade(), form.getIdAlunos());
 		
 		String path = String.format("/educamais/turmas/%d/atividade/%s", turmaId, atividade.getCodigo());
 		
@@ -103,7 +108,8 @@ public class AtividadeController {
 	public ResponseEntity<Void> submeterRespostas(@RequestBody @Valid ListaRespostaForm form, @PathVariable Long turmaId,  @PathVariable Long atividadeId, Principal principal) {
 		
 		Usuario usuarioLogado = Util.recuperarUsuarioLogado(principal);
-		service.submeterRespostas(Resposta.fromRespostaForm(form.getRespostas()), turmaId, atividadeId, usuarioLogado);
+		Turma turma = turmaService.buscarTurmaPorId(turmaId);
+		service.submeterRespostas(Resposta.fromRespostaForm(form.getRespostas()), turma, atividadeId, usuarioLogado);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
