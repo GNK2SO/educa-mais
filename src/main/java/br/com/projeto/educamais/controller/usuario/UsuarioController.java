@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.projeto.educamais.controller.generic.form.AlteraNomeForm;
 import br.com.projeto.educamais.controller.usuario.form.UsuarioForm;
 import br.com.projeto.educamais.domain.Usuario;
-import br.com.projeto.educamais.service.UsuarioService;
+import br.com.projeto.educamais.service.interfaces.UsuarioService;
 import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.util.Util;
 import br.com.projeto.educamais.util.messages.UsuarioErrors;
@@ -39,9 +39,7 @@ public class UsuarioController {
 		@ApiResponse(code = HttpStatusCode.CONFLICT, message = UsuarioErrors.CONFLICT)
 	})
 	public ResponseEntity<Void> cadastrarUsuario(@RequestBody @Valid UsuarioForm form) {
-		
 		usuarioService.salva(form.toUsuario());
-		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	

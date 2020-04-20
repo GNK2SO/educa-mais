@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import br.com.projeto.educamais.config.security.jwt.AutenticacaoViaToken;
 import br.com.projeto.educamais.config.security.jwt.TokenService;
 import br.com.projeto.educamais.service.AutenticacaoService;
-import br.com.projeto.educamais.service.UsuarioService;
+import br.com.projeto.educamais.service.interfaces.UsuarioService;
 
 @EnableWebSecurity
 @Configuration
@@ -32,7 +32,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Autowired
 	public UsuarioService usuarioService;
 	
-	private static final String[] AUTH_WHITELIST = { "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/routes/**", "/favicon.ico" };
+	private static final String[] AUTH_WHITELIST = { 
+			"/swagger-resources/**", 
+			"/swagger-ui.html", 
+			"/webjars/**", 
+			"/routes/**", 
+			"/favicon.ico",
+			"/h2-console/**"
+	};
 
 	
 	@Override

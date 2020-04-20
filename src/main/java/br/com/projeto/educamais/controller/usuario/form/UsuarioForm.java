@@ -1,10 +1,11 @@
 package br.com.projeto.educamais.controller.usuario.form;
 
+import static br.com.projeto.educamais.util.Util.criptografar;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.com.projeto.educamais.domain.Usuario;
 
@@ -25,7 +26,7 @@ public class UsuarioForm {
 		
 		usuario.setNome(this.getNome());
 		usuario.setEmail(this.getEmail());
-		usuario.setSenha(new BCryptPasswordEncoder().encode(this.getSenha()));
+		usuario.setSenha(criptografar(this.getSenha()));
 		
 		return usuario;
 	}

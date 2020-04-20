@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import br.com.projeto.educamais.domain.Usuario;
-import br.com.projeto.educamais.service.UsuarioService;
+import br.com.projeto.educamais.service.interfaces.UsuarioService;
 
 public class AutenticacaoViaToken extends OncePerRequestFilter {
 	

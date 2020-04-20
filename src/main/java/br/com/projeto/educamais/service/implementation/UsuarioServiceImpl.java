@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.service;
+package br.com.projeto.educamais.service.implementation;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,10 +12,12 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeExistenteException;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.repository.UsuarioRepository;
+import br.com.projeto.educamais.service.GenericService;
+import br.com.projeto.educamais.service.interfaces.UsuarioService;
 import br.com.projeto.educamais.util.messages.UsuarioErrors;
 
 @Service
-public class UsuarioService extends GenericService {
+public class UsuarioServiceImpl extends GenericService implements UsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -59,5 +61,6 @@ public class UsuarioService extends GenericService {
 	@Transactional
 	public void atualizarDados(Usuario usuario) {
 		preencherCamposAuditoria(usuario, usuario);
+		usuarioRepository.save(usuario);
 	}
 }
