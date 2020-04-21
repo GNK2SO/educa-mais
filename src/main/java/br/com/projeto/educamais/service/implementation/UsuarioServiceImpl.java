@@ -41,21 +41,23 @@ public class UsuarioServiceImpl extends GenericService implements UsuarioService
 	@Transactional
 	public Usuario buscarPorId(Long idUsuario) {
 		 Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
+		 
 		 if(usuario.isPresent()) {
 			 return usuario.get();
 		 }
+		 
 		 throw new EntidadeInexistenteException(UsuarioErrors.NOT_FOUND);
 	}
 	
 	@Transactional
 	public Usuario buscarPorEmail(String email) {
-		 Usuario usuario = usuarioRepository.findByEmail(email);
+		Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
 		 
-		 if(usuario != null) {
-			 return usuario;
-		 }
+		if(usuario.isPresent()) {
+			 return usuario.get();
+		}
 		 
-		 throw new EntidadeInexistenteException(UsuarioErrors.NOT_FOUND);
+		throw new EntidadeInexistenteException(UsuarioErrors.NOT_FOUND);
 	}
 	
 	@Transactional
