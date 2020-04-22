@@ -26,7 +26,7 @@ import br.com.projeto.educamais.domain.Postagem;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.service.PostagemService;
-import br.com.projeto.educamais.service.TurmaService;
+import br.com.projeto.educamais.service.interfaces.TurmaService;
 import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.util.Util;
 import br.com.projeto.educamais.util.messages.PostagemErrors;

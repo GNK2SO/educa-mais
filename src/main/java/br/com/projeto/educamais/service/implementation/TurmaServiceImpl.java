@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.service;
+package br.com.projeto.educamais.service.implementation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +20,14 @@ import br.com.projeto.educamais.exception.ProfessorNaoPodeSerAlunoException;
 import br.com.projeto.educamais.exception.UsuarioJaEstaNaTurmaException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.TurmaRepository;
+import br.com.projeto.educamais.service.GenericService;
+import br.com.projeto.educamais.service.PostagemService;
+import br.com.projeto.educamais.service.interfaces.TurmaService;
 import br.com.projeto.educamais.util.Storage;
 import br.com.projeto.educamais.util.messages.TurmaErrors;
 
 @Service
-public class TurmaService extends GenericService {
+public class TurmaServiceImpl extends GenericService implements TurmaService {
 
 	
 	@Autowired
@@ -43,7 +46,8 @@ public class TurmaService extends GenericService {
 			throw new EntidadeExistenteException(TurmaErrors.CONFLICT);
 		}
 		
-		if(turmaRepository.existsByCodigo(turma.getCodigo())) {
+		//TODO: REFATORAR, POIS NÃO É ESCALÁVEL
+		while(turmaRepository.existsByCodigo(turma.getCodigo())) {
 			String codigo = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 			turma.setCodigo(codigo); 
 		}
@@ -95,7 +99,7 @@ public class TurmaService extends GenericService {
 
 	@Transactional
 	public void participar(Turma turma, Usuario usuario) {
-		if(turma.getProfessor().getId() == usuario.getId()) {
+		if(turma.professorIsEqualTo(usuario)) {
 			throw new ProfessorNaoPodeSerAlunoException();
 		}
 		

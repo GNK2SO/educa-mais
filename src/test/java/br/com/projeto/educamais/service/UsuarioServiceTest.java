@@ -13,11 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static br.com.projeto.educamais.util.Util.criptografar;
 
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +30,6 @@ import br.com.projeto.educamais.service.interfaces.UsuarioService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@TestMethodOrder(OrderAnnotation.class)
 public class UsuarioServiceTest {
 	
 	private final Long ID = 1L;
@@ -64,7 +60,6 @@ public class UsuarioServiceTest {
 	
 	
 	@Test
-	@Order(1)
 	public void salvarDeveChamarSaveDoRepositorio()
 	{
 		service.salva(usuario);
@@ -72,7 +67,6 @@ public class UsuarioServiceTest {
 	}
 	
 	@Test
-	@Order(2)
 	public void naoDeveSalvarUsuarioComEmailExistente()
 	{
 		when(repository.existsByEmail(EMAIL)).thenReturn(true);
@@ -83,7 +77,6 @@ public class UsuarioServiceTest {
 	}
 	
 	@Test
-	@Order(3)
 	public void deveRetornarTodosUsuarioCadastrados()
 	{
 		Usuario usuario_1 = Usuario.builder()
@@ -114,7 +107,6 @@ public class UsuarioServiceTest {
 	}
 	
 	@Test
-	@Order(4)
 	public void idValidoDeveRetornaUsuario()
 	{
 		when(repository.findById(ID)).thenReturn(Optional.of(usuario));
@@ -123,7 +115,6 @@ public class UsuarioServiceTest {
 	}
 
 	@Test
-	@Order(5)
 	public void idInvalidoDeveRetornaException()
 	{
 		when(repository.findById(ID)).thenReturn(Optional.empty());
@@ -133,7 +124,6 @@ public class UsuarioServiceTest {
 	}
 	
 	@Test
-	@Order(6)
 	public void emailValidoDeveRetornaUsuario()
 	{
 		when(repository.findByEmail(EMAIL)).thenReturn(Optional.of(usuario));
@@ -142,7 +132,6 @@ public class UsuarioServiceTest {
 	}
 
 	@Test
-	@Order(7)
 	public void emailInvalidoDeveRetornaException()
 	{
 		when(repository.findByEmail(EMAIL)).thenReturn(Optional.empty());
@@ -152,7 +141,6 @@ public class UsuarioServiceTest {
 	}
 	
 	@Test
-	@Order(8)
 	public void deveAtualizarEmailUsuario()
 	{
 		usuario.setNome("NOVO_NOME");

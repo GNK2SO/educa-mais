@@ -30,7 +30,7 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.ProfessorNaoPodeSerAlunoException;
 import br.com.projeto.educamais.exception.UsuarioJaEstaNaTurmaException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
-import br.com.projeto.educamais.service.TurmaService;
+import br.com.projeto.educamais.service.interfaces.TurmaService;
 import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.util.Util;
 import br.com.projeto.educamais.util.messages.TurmaErrors;

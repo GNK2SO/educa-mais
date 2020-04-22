@@ -15,6 +15,7 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.ArquivoRepository;
+import br.com.projeto.educamais.service.interfaces.TurmaService;
 import br.com.projeto.educamais.util.messages.ArquivoErrors;
 import br.com.projeto.educamais.util.messages.PostagemErrors;
 
