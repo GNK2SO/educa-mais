@@ -21,7 +21,7 @@ import br.com.projeto.educamais.exception.UsuarioJaEstaNaTurmaException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.TurmaRepository;
 import br.com.projeto.educamais.service.GenericService;
-import br.com.projeto.educamais.service.PostagemService;
+import br.com.projeto.educamais.service.interfaces.PostagemService;
 import br.com.projeto.educamais.service.interfaces.TurmaService;
 import br.com.projeto.educamais.util.Storage;
 import br.com.projeto.educamais.util.messages.TurmaErrors;

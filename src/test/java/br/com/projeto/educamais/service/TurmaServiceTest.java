@@ -25,6 +25,7 @@ import br.com.projeto.educamais.exception.ProfessorNaoPodeSerAlunoException;
 import br.com.projeto.educamais.exception.UsuarioJaEstaNaTurmaException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.TurmaRepository;
+import br.com.projeto.educamais.service.interfaces.PostagemService;
 import br.com.projeto.educamais.service.interfaces.TurmaService;
 
 @ExtendWith(SpringExtension.class)

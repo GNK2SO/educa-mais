@@ -25,7 +25,7 @@ import br.com.projeto.educamais.controller.turma.dto.TurmaPostagemDTO;
 import br.com.projeto.educamais.domain.Postagem;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
-import br.com.projeto.educamais.service.PostagemService;
+import br.com.projeto.educamais.service.interfaces.PostagemService;
 import br.com.projeto.educamais.service.interfaces.TurmaService;
 import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.util.Util;
@@ -88,7 +88,7 @@ public class PostagemController {
 		
 		Usuario usuario = Util.recuperarUsuarioLogado(principal);
 		Turma turma = turmaService.buscarTurmaPorId(turmaId);
-		postagemService.atualizarPostagem(turma, usuario, postagemId, form);
+		postagemService.atualizarPostagem(turma, usuario, form.getPostagem(postagemId));
 		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}

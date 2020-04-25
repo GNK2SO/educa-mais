@@ -15,12 +15,13 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.ArquivoRepository;
+import br.com.projeto.educamais.service.interfaces.PostagemService;
 import br.com.projeto.educamais.service.interfaces.TurmaService;
 import br.com.projeto.educamais.util.messages.ArquivoErrors;
 import br.com.projeto.educamais.util.messages.PostagemErrors;
 
 @Service
-public class ArquivoService {
+public class ArquivoService extends GenericService{
 
 	@Autowired
 	private PostagemService postagemService;
@@ -48,7 +49,7 @@ public class ArquivoService {
 			postagem.add(arquivoSalvo);
 		}
 		
-		postagemService.atualizarPostagem(postagem, usuario);
+		preencherCamposAuditoria(postagem, usuario);
 	}
 	
 	@Transactional
@@ -79,7 +80,7 @@ public class ArquivoService {
 		
 		postagem.remove(arquivo);
 		
-		postagemService.atualizarPostagem(postagem, usuario);
+		preencherCamposAuditoria(postagem, usuario);
 	}
 	
 }

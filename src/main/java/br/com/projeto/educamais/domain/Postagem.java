@@ -45,4 +45,8 @@ public class Postagem extends EntidadeAuditavel{
 	public boolean notContains(Arquivo arquivo) {
 		return !( this.arquivos.contains(arquivo) );
 	}
+	public boolean notBelongsTo(Turma turma)
+	{
+		return !this.turma.equals(turma);
+	}
 }

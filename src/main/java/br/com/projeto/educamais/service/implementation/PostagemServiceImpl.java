@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.service;
+package br.com.projeto.educamais.service.implementation;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
@@ -11,18 +11,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import br.com.projeto.educamais.controller.postagem.form.AtualizarPostagemForm;
 import br.com.projeto.educamais.domain.Postagem;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.PostagemRepository;
+import br.com.projeto.educamais.service.GenericService;
+import br.com.projeto.educamais.service.interfaces.PostagemService;
 import br.com.projeto.educamais.util.messages.PostagemErrors;
 import br.com.projeto.educamais.util.messages.TurmaErrors;
 
 @Service
-public class PostagemService extends GenericService {
+public class PostagemServiceImpl extends GenericService implements PostagemService{
 
 	
 	@Autowired
@@ -75,24 +76,26 @@ public class PostagemService extends GenericService {
 	}
 
 	@Transactional
-	public void atualizarPostagem(Turma turma, Usuario usuario, Long postagemId, AtualizarPostagemForm form) {
+	public void atualizarPostagem(Turma turma, Usuario usuario, Postagem postagem) {
 		
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_ATUALIZAR_POSTAGEM);
 		}
 		
-		Postagem postagem = buscarPorId(postagemId);
-		postagem.setTitulo(form.getTitulo());
-		postagem.setDescricao(form.getDescricao());
+		Postagem postagemOld = buscarPorId(postagem.getId());
 		
-		preencherCamposAuditoria(postagem, usuario);
+		if(postagemOld.notBelongsTo(turma))
+		{
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_ATUALIZAR_POSTAGEM);
+		}
 		
+		postagemOld.setTitulo(postagem.getTitulo());
+		postagemOld.setDescricao(postagem.getDescricao());
+		
+		preencherCamposAuditoria(postagem, usuario);	
 	}
 	
-	@Transactional
-	public void atualizarPostagem(Postagem postagem, Usuario usuario) {
-		preencherCamposAuditoria(postagem, usuario);
-	}
+	
 
 	@Transactional
 	public void deletarPostagem(Turma turma, Usuario usuario, Long postagemId) {
@@ -100,11 +103,14 @@ public class PostagemService extends GenericService {
 		if(turma.professorIsNotEqualTo(usuario)) {
 			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_REMOVER_POSTAGEM);
 		}
-		
+	
 		Postagem postagem = buscarPorId(postagemId);
 		
-		repository.deleteById(postagem.getId());
+		if(postagem.notBelongsTo(turma))
+		{
+			throw new UsuarioNaoTemPermissaoParaEssaAtividadeException(PostagemErrors.FORBIDDEN_ATUALIZAR_POSTAGEM);
+		}
+		
+		repository.delete(postagem);
 	}
-
-	
 }
