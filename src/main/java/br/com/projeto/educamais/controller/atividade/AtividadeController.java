@@ -28,7 +28,7 @@ import br.com.projeto.educamais.domain.Atividade;
 import br.com.projeto.educamais.domain.Resposta;
 import br.com.projeto.educamais.domain.Turma;
 import br.com.projeto.educamais.domain.Usuario;
-import br.com.projeto.educamais.service.AtividadeService;
+import br.com.projeto.educamais.service.interfaces.AtividadeService;
 import br.com.projeto.educamais.service.interfaces.TurmaService;
 import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.util.Util;

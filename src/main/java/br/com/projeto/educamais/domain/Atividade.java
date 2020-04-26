@@ -118,11 +118,11 @@ public class Atividade extends EntidadeAuditavel {
 				.findFirst();
 	}
 
-	public boolean turmaIsNotEqualsTo(Turma turma) {
-		if(this.turma == null)
-		{
-			return false;
-		}
+	public boolean pertenceA(Turma turma) {
 		return this.turma.equals(turma);
+	}
+	
+	public boolean naoPertenceA(Turma turma) {
+		return !this.turma.equals(turma);
 	}
 }

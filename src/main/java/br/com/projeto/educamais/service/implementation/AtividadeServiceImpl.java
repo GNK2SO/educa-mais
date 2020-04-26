@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.service;
+package br.com.projeto.educamais.service.implementation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +18,15 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.AtividadeRepository;
+import br.com.projeto.educamais.service.GenericService;
+import br.com.projeto.educamais.service.PerguntaService;
+import br.com.projeto.educamais.service.RespostaService;
+import br.com.projeto.educamais.service.interfaces.AtividadeService;
 import br.com.projeto.educamais.util.messages.AtividadeErrors;
 import br.com.projeto.educamais.util.messages.TurmaErrors;
 
 @Service
-public class AtividadeService extends GenericService {
+public class AtividadeServiceImpl extends GenericService implements AtividadeService{
 
 	@Autowired
 	private AtividadeRepository repository;
@@ -64,6 +68,7 @@ public class AtividadeService extends GenericService {
 		
 		atividade.setTurma(turma);
 		
+		//TODO: REFATORAR POIS NÂO DEVE EXISTIR ATIVIDADES COM CÓDIGOS IGUAIS
 		String codigo = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 		atividade.setCodigo(codigo);
 		
@@ -81,7 +86,7 @@ public class AtividadeService extends GenericService {
 		return atividade;
 	}
 	
-	public List<Usuario> getAlunosBy(List<Long> idAlunos, Turma turma) {
+	private List<Usuario> getAlunosBy(List<Long> idAlunos, Turma turma) {
 		List<Usuario> alunos = new ArrayList<Usuario>();
 
 		idAlunos.stream().forEach(alunoId -> {
@@ -112,7 +117,7 @@ public class AtividadeService extends GenericService {
 		
 		Atividade atividade = buscarPorId(atividadeId);
 		
-		if(atividade.turmaIsNotEqualsTo(turma))
+		if(atividade.naoPertenceA(turma))
 		{
 			throw new EntidadeInexistenteException(AtividadeErrors.FORBIDDEN_ATIVIDADE_NOT_PERTENCE_TO_TURMA);
 		}
