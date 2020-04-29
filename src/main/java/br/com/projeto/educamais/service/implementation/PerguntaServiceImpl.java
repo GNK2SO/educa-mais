@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.service;
+package br.com.projeto.educamais.service.implementation;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 
 import br.com.projeto.educamais.domain.Pergunta;
 import br.com.projeto.educamais.repository.PerguntaRepository;
+import br.com.projeto.educamais.service.interfaces.PerguntaService;
 
 @Service
-public class PerguntaService {
+public class PerguntaServiceImpl implements PerguntaService {
 
 	@Autowired
 	private PerguntaRepository repository;
