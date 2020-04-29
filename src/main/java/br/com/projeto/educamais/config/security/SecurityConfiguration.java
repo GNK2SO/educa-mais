@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import br.com.projeto.educamais.config.security.jwt.AutenticacaoViaToken;
 import br.com.projeto.educamais.config.security.jwt.TokenService;
-import br.com.projeto.educamais.service.AutenticacaoService;
+import br.com.projeto.educamais.service.interfaces.AutenticacaoService;
 import br.com.projeto.educamais.service.interfaces.UsuarioService;
 
 @EnableWebSecurity
