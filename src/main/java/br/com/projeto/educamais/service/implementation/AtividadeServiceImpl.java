@@ -19,9 +19,9 @@ import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.AtividadeRepository;
 import br.com.projeto.educamais.service.GenericService;
-import br.com.projeto.educamais.service.RespostaService;
 import br.com.projeto.educamais.service.interfaces.AtividadeService;
 import br.com.projeto.educamais.service.interfaces.PerguntaService;
+import br.com.projeto.educamais.service.interfaces.RespostaService;
 import br.com.projeto.educamais.util.messages.AtividadeErrors;
 import br.com.projeto.educamais.util.messages.TurmaErrors;
 

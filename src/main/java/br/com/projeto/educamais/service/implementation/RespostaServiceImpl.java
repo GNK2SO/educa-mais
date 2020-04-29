@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.service;
+package br.com.projeto.educamais.service.implementation;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 
 import br.com.projeto.educamais.domain.Resposta;
 import br.com.projeto.educamais.repository.RespostaRepository;
+import br.com.projeto.educamais.service.interfaces.RespostaService;
 
 @Service
-public class RespostaService {
+public class RespostaServiceImpl implements RespostaService {
 
 	@Autowired
 	private RespostaRepository repository;
