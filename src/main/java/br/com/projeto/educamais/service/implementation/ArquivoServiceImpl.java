@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.service;
+package br.com.projeto.educamais.service.implementation;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,13 +15,15 @@ import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
 import br.com.projeto.educamais.exception.UsuarioNaoTemPermissaoParaEssaAtividadeException;
 import br.com.projeto.educamais.repository.ArquivoRepository;
+import br.com.projeto.educamais.service.GenericService;
+import br.com.projeto.educamais.service.interfaces.ArquivoService;
 import br.com.projeto.educamais.service.interfaces.PostagemService;
 import br.com.projeto.educamais.service.interfaces.TurmaService;
 import br.com.projeto.educamais.util.messages.ArquivoErrors;
 import br.com.projeto.educamais.util.messages.PostagemErrors;
 
 @Service
-public class ArquivoService extends GenericService{
+public class ArquivoServiceImpl extends GenericService implements ArquivoService{
 
 	@Autowired
 	private PostagemService postagemService;

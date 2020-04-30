@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.projeto.educamais.domain.Arquivo;
 import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.FalhaUploadArquivoException;
-import br.com.projeto.educamais.service.ArquivoService;
+import br.com.projeto.educamais.service.interfaces.ArquivoService;
 import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.util.Storage;
 import br.com.projeto.educamais.util.Util;
