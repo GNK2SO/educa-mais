@@ -1,4 +1,4 @@
-package br.com.projeto.educamais.config.security.jwt;
+package br.com.projeto.educamais.config.security;
 
 import java.io.IOException;
 
@@ -12,14 +12,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import br.com.projeto.educamais.domain.Usuario;
+import br.com.projeto.educamais.service.interfaces.JwtService;
 import br.com.projeto.educamais.service.interfaces.UsuarioService;
 
-public class AutenticacaoViaToken extends OncePerRequestFilter {
+public class JwtRequestFilter extends OncePerRequestFilter {
 	
-	private TokenService tokenService;
+	private JwtService tokenService;
 	private UsuarioService usuarioService;
 
-	public AutenticacaoViaToken(TokenService tokenService, UsuarioService usuarioService) {
+	public JwtRequestFilter(JwtService tokenService, UsuarioService usuarioService) {
 		super();
 		this.tokenService = tokenService;
 		this.usuarioService = usuarioService;

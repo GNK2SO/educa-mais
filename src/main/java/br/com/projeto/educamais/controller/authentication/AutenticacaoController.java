@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.projeto.educamais.config.security.jwt.TokenService;
 import br.com.projeto.educamais.controller.authentication.dto.LoginDTO;
 import br.com.projeto.educamais.controller.authentication.form.LoginForm;
+import br.com.projeto.educamais.domain.Usuario;
 import br.com.projeto.educamais.exception.EntidadeInexistenteException;
+import br.com.projeto.educamais.service.interfaces.JwtService;
 import br.com.projeto.educamais.util.HttpStatusCode;
 import br.com.projeto.educamais.util.messages.AutenticacaoErrors;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +32,7 @@ public class AutenticacaoController {
 	private AuthenticationManager authManager;
 	
 	@Autowired
-	private TokenService tokenService;
+	private JwtService tokenService;
 
 	@PostMapping
 	@ApiOperation(value = "Autenticação da conta de um usuário.")
@@ -44,7 +45,8 @@ public class AutenticacaoController {
 		
 		try {
 			Authentication authentication = authManager.authenticate(dadosLogin);
-			String token = tokenService.gerarToken(authentication);
+			Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
+			String token = tokenService.gerarToken(usuarioLogado);
 			return ResponseEntity.ok(new LoginDTO(token));
 		} catch(AuthenticationException e) {
 			throw new EntidadeInexistenteException(AutenticacaoErrors.NOT_FOUND);

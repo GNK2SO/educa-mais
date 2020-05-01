@@ -14,8 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import br.com.projeto.educamais.config.security.jwt.AutenticacaoViaToken;
-import br.com.projeto.educamais.config.security.jwt.TokenService;
+import br.com.projeto.educamais.service.interfaces.JwtService;
 import br.com.projeto.educamais.service.interfaces.AutenticacaoService;
 import br.com.projeto.educamais.service.interfaces.UsuarioService;
 
@@ -27,7 +26,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	public AutenticacaoService authService;
 	
 	@Autowired
-	public TokenService tokenService;
+	public JwtService tokenService;
 	
 	@Autowired
 	public UsuarioService usuarioService;
@@ -63,7 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 			.csrf().disable()
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and().addFilterBefore(new AutenticacaoViaToken(tokenService, usuarioService), UsernamePasswordAuthenticationFilter.class)
+			.and().addFilterBefore(new JwtRequestFilter(tokenService, usuarioService), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/auth").permitAll()
 				.antMatchers(HttpMethod.POST, "/educamais/usuario").permitAll()

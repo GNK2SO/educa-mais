@@ -1,18 +1,18 @@
-package br.com.projeto.educamais.config.security.jwt;
+package br.com.projeto.educamais.service.implementation;
 
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import br.com.projeto.educamais.domain.Usuario;
+import br.com.projeto.educamais.service.interfaces.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
-public class TokenService {
+public class JwtServiceImpl implements JwtService {
 
 	@Value("${jwt.expiration}")
 	private String expiration;
@@ -20,8 +20,7 @@ public class TokenService {
 	@Value("${jwt.secret}")
 	private String secret;
 	
-	public String gerarToken(Authentication auth) {
-		Usuario usuarioLogado = (Usuario) auth.getPrincipal();
+	public String gerarToken(Usuario usuarioLogado) {
 		Date hoje = new Date();
 		Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
 		return Jwts.builder()
