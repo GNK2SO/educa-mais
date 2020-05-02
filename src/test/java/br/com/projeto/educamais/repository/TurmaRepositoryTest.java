@@ -94,8 +94,7 @@ public class TurmaRepositoryTest {
 		
 		List<Turma> turmasObtidas = repository.findByProfessorOrAlunosContaining(usuario, usuario);
 		
-		assertTrue(turmasObtidas.contains(turmaProfessor));
-		assertTrue(turmasObtidas.contains(turmaAluno));
+		assertTrue(turmasObtidas.containsAll(Arrays.asList(turmaProfessor, turmaAluno)));
 	}
 	
 	@Test
